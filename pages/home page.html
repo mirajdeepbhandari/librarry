@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e67e22;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #777;
+            --border-color: #ddd;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 10px ;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .hamburger .line {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Logout Button Styles */
+        .logout-btn {
+            background: linear-gradient(135deg, var(--secondary-color), #d35400);
+            color: white !important;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #d35400, var(--secondary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://source.unsplash.com/random/1600x900/?library') no-repeat center center/cover;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+        }
+
+        .search-bar button {
+            padding: 15px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #d35400;
+        }
+
+        /* Stats Section */
+        .stats {
+            background-color: white;
+            padding: 50px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Featured Books Section - Enhanced Professional Styling */
+        .featured-books {
+            padding: 80px 0;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .featured-books::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23f0f0f0"/></svg>');
+            background-size: 20px 20px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .featured-books .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-slider {
+            position: relative;
+            margin: 0 auto;
+            max-width: 1100px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .slider-title {
+            font-size: 1.4rem;
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .slider-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .slider-btn {
+            background-color: white;
+            border: 2px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+        }
+
+        .slider-btn:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .slider-btn:active {
+            transform: translateY(0);
+        }
+
+        .slider-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f5f5f5;
+            color: #aaa;
+            border-color: #ddd;
+            transform: none;
+        }
+
+        /* Books Wrapper and Container */
+        .books-wrapper {
+            overflow: hidden;
+            position: relative;
+            margin: 0 -10px;
+        }
+
+        .books-container {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin: 0 -15px;
+            padding: 10px 0;
+        }
+
+        /* Book Card Styling */
+        .book {
+            flex: 0 0 auto;
+            width: calc(25% - 30px);
+            margin: 0 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        .book:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-cover {
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .book:hover .book-cover::after {
+            opacity: 1;
+        }
+
+        .book-info {
+            padding: 20px;
+            position: relative;
+        }
+
+        .book h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .book:hover h3 {
+            color: var(--secondary-color);
+        }
+
+        .book p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .book-rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .book-rating span {
+            color: #f39c12;
+            margin-right: 5px;
+        }
+
+        .book-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .book-status.available {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .book-status.borrowed {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .book-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .book-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .book-btn.primary {
+            background-color: var(--secondary-color);
+            color: white;
+            flex: 1;
+        }
+
+        .book-btn.primary:hover {
+            background-color: #d35400;
+        }
+
+        .book-btn.secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            margin-left: 10px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-btn.secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Slider Pagination */
+        .slider-pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .pagination-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .pagination-dot:hover {
+            background-color: #ccc;
+        }
+
+        .pagination-dot.active {
+            background-color: var(--secondary-color);
+            transform: scale(1.2);
+        }
+
+        /* Book Category Tag */
+        .book-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        /* Responsive Slider */
+        @media (max-width: 992px) {
+            .book {
+                width: calc(33.333% - 30px);
+            }
+            
+            .book-cover {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .book {
+                width: calc(50% - 30px);
+            }
+            
+            .book-slider {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .book {
+                width: calc(100% - 30px);
+            }
+            
+            .book-cover {
+                height: 220px;
+            }
+            
+            .slider-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .slider-controls {
+                align-self: center;
+            }
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .service-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background-color: rgba(52, 152, 219, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .service-icon.borrow {
+            background-image: url('https://source.unsplash.com/random/80x80/?book');
+            background-size: cover;
+        }
+
+        .service-icon.ebook {
+            background-image: url('https://source.unsplash.com/random/80x80/?ebook');
+            background-size: cover;
+        }
+
+        .service-icon.study {
+            background-image: url('https://source.unsplash.com/random/80x80/?study');
+            background-size: cover;
+        }
+
+        .service-icon.events {
+            background-image: url('https://source.unsplash.com/random/80x80/?event');
+            background-size: cover;
+        }
+
+        .service-card h3 {
+            margin-bottom: 15px;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://source.unsplash.com/random/1600x900/?books') no-repeat center center/cover;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #d35400;
+            color: white;
+        }
+
+        .secondary-btn {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .secondary-btn:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .footer-section p {
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+
+        .footer-section.links ul {
+            list-style: none;
+        }
+
+        .footer-section.links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section.links a {
+            color: #bdc3c7;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section.links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer-section.contact span {
+            font-weight: 600;
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Hamburger Menu Animation */
+        .hamburger .line.active:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger .line.active:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger .line.active:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .stats .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+                z-index: 1001;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.5s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .search-bar input {
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            
+            .search-bar button {
+                border-radius: 4px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>LibraryHub</h1>
+            </div>
+            <nav>
+                <div class="hamburger">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Members</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li>
+                        <a href="#" class="logout-btn" id="logout-btn">
+                            <span class="logout-icon"></span>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Discover Your Next Favorite Book</h2>
+                <p>Access thousands of books, manage your borrowings, and explore our vast collection.</p>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search by title, author, or ISBN...">
+                    <button>Search</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stat-item">
+                <h3>10,000+</h3>
+                <p>Books</p>
+            </div>
+            <div class="stat-item">
+                <h3>5,000+</h3>
+                <p>Members</p>
+            </div>
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Daily Visitors</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Online Access</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-books">
+        <div class="container">
+            <h2 class="section-title">Featured Books</h2>
+            <div class="book-slider">
+                <div class="slider-header">
+                    <h3 class="slider-title">Trending This Week</h3>
+                    <div class="slider-controls">
+                        <button id="prev-btn" class="slider-btn">❮</button>
+                        <button id="next-btn" class="slider-btn">❯</button>
+                    </div>
+                </div>
+                <div class="books-wrapper">
+                    <div class="books-container">
+                        <div class="book">
+                            <div class="book-category">Fiction</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,gatsby')"></div>
+                            <div class="book-info">
+                                <h3>The Great Gatsby</h3>
+                                <p>F. Scott Fitzgerald</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★☆</span> 4.5
+                                    </div>
+                                    <div>1925</div>
+                                </div>
+                                <div class="book-status available">Available</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Borrow Now</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Classic</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,mockingbird')"></div>
+                            <div class="book-info">
+                                <h3>To Kill a Mockingbird</h3>
+                                <p>Harper Lee</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★★</span> 4.8
+                                    </div>
+                                    <div>1960</div>
+                                </div>
+                                <div class="book-status borrowed">Borrowed</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Join Waitlist</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Dystopian</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,1984')"></div>
+                            <div class="book-info">
+                                <h3>1984</h3>
+                                <p>George Orwell</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★☆</span> 4.6
+                                    </div>
+                                    <div>1949</div>
+                                </div>
+                                <div class="book-status available">Available</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Borrow Now</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Romance</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,pride')"></div>
+                            <div class="book-info">
+                                <h3>Pride and Prejudice</h3>
+                                <p>Jane Austen</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★☆</span> 4.7
+                                    </div>
+                                    <div>1813</div>
+                                </div>
+                                <div class="book-status available">Available</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Borrow Now</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Fantasy</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,hobbit')"></div>
+                            <div class="book-info">
+                                <h3>The Hobbit</h3>
+                                <p>J.R.R. Tolkien</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★★</span> 4.9
+                                    </div>
+                                    <div>1937</div>
+                                </div>
+                                <div class="book-status borrowed">Borrowed</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Join Waitlist</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Fantasy</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,harry')"></div>
+                            <div class="book-info">
+                                <h3>Harry Potter</h3>
+                                <p>J.K. Rowling</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★☆</span> 4.7
+                                    </div>
+                                    <div>1997</div>
+                                </div>
+                                <div class="book-status available">Available</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Borrow Now</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Fantasy</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,lord')"></div>
+                            <div class="book-info">
+                                <h3>Lord of the Rings</h3>
+                                <p>J.R.R. Tolkien</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★★</span> 4.9
+                                    </div>
+                                    <div>1954</div>
+                                </div>
+                                <div class="book-status available">Available</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Borrow Now</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="book">
+                            <div class="book-category">Philosophy</div>
+                            <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,alchemist')"></div>
+                            <div class="book-info">
+                                <h3>The Alchemist</h3>
+                                <p>Paulo Coelho</p>
+                                <div class="book-meta">
+                                    <div class="book-rating">
+                                        <span>★★★★☆</span> 4.6
+                                    </div>
+                                    <div>1988</div>
+                                </div>
+                                <div class="book-status borrowed">Borrowed</div>
+                                <div class="book-actions">
+                                    <div class="book-btn primary">Join Waitlist</div>
+                                    <div class="book-btn secondary">♡</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-pagination" id="slider-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon borrow"></div>
+                    <h3>Book Borrowing</h3>
+                    <p>Borrow up to 5 books for a period of 14 days with option to extend.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon ebook"></div>
+                    <h3>E-Books</h3>
+                    <p>Access our digital collection of e-books and read them on any device.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon study"></div>
+                    <h3>Study Rooms</h3>
+                    <p>Book private study rooms for individual or group study sessions.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon events"></div>
+                    <h3>Events</h3>
+                    <p>Participate in book clubs, author talks, and literary events.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Get Started?</h2>
+            <p>Join our library today and get access to thousands of books and resources.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn primary-btn">Sign Up</a>
+                <a href="#" class="btn secondary-btn">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About LibraryHub</h3>
+                    <p>LibraryHub is a modern library management system designed to make book borrowing and management easy and efficient.</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Books</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Membership</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><span>Address:</span> 123 Library Street, Booktown</p>
+                    <p><span>Phone:</span> (123) 456-7890</p>
+                    <p><span>Email:</span> info@libraryhub.com</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"></a>
+                        <a href="#" class="social-icon twitter"></a>
+                        <a href="#" class="social-icon instagram"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LibraryHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Navigation Toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
+                
+                // Animate hamburger to X
+                const lines = document.querySelectorAll('.hamburger .line');
+                lines.forEach(line => line.classList.toggle('active'));
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!hamburger.contains(event.target) && !navLinks.contains(event.target) && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                    
+                    const lines = document.querySelectorAll('.hamburger .line');
+                    lines.forEach(line => line.classList.remove('active'));
+                }
+            });
+            
+            // Enhanced Book Slider Functionality
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const booksContainer = document.querySelector('.books-container');
+            const books = document.querySelectorAll('.book');
+            const paginationContainer = document.getElementById('slider-pagination');
+            
+            let currentIndex = 0;
+            let booksPerView = calculateBooksPerView();
+            let totalSlides = Math.ceil(books.length / booksPerView);
+            
+            // Calculate how many books should be visible based on screen width
+            function calculateBooksPerView() {
+                if (window.innerWidth < 576) return 1;
+                if (window.innerWidth < 768) return 2;
+                if (window.innerWidth < 992) return 3;
+                return 4;
+            }
+            
+            // Create pagination dots
+            function createPagination() {
+                paginationContainer.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('pagination-dot');
+                    if (i === currentIndex) {
+                        dot.classList.add('active');
+                    }
+                    dot.addEventListener('click', function() {
+                        currentIndex = i;
+                        updateSlider();
+                    });
+                    paginationContainer.appendChild(dot);
+                }
+            }
+            
+            // Update books per view on window resize
+            window.addEventListener('resize', function() {
+                const oldBooksPerView = booksPerView;
+                booksPerView = calculateBooksPerView();
+                
+                // If books per view has changed, recalculate total slides and update
+                if (oldBooksPerView !== booksPerView) {
+                    totalSlides = Math.ceil(books.length / booksPerView);
+                    // Adjust current index if needed
+                    if (currentIndex >= totalSlides) {
+                        currentIndex = totalSlides - 1;
+                    }
+                    createPagination();
+                    updateSlider();
+                }
+            });
+            
+            function updateSlider() {
+                // Calculate the translation value based on current index and books per view
+                const bookWidth = 100 / booksPerView;
+                const translateValue = -currentIndex * bookWidth * booksPerView;
+                booksContainer.style.transform = `translateX(${translateValue}%)`;
+                
+                // Update pagination dots
+                const dots = document.querySelectorAll('.pagination-dot');
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+                
+                // Enable/disable navigation buttons
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === totalSlides - 1;
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlider();
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentIndex < totalSlides - 1) {
+                    currentIndex++;
+                    updateSlider();
+                }
+            });
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateSlider();
+                    }
+                } else if (e.key === 'ArrowRight') {
+                    if (currentIndex < totalSlides - 1) {
+                        currentIndex++;
+                        updateSlider();
+                    }
+                }
+            });
+            
+            // Add touch swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            const slider = document.querySelector('.books-wrapper');
+            
+            slider.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            
+            slider.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    // Swipe left
+                    if (currentIndex < totalSlides - 1) {
+                        currentIndex++;
+                        updateSlider();
+                    }
+                } else if (touchEndX > touchStartX + swipeThreshold) {
+                    // Swipe right
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateSlider();
+                    }
+                }
+            }
+            
+            // Initialize slider
+            createPagination();
+            updateSlider();
+            
+            // Add animation to service cards on scroll
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            function checkScroll() {
+                serviceCards.forEach(card => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    const triggerBottom = window.innerHeight * 0.8;
+                    
+                    if (cardTop < triggerBottom) {
+                        card.classList.add('show');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on initial load
+            
+            // Book action buttons functionality
+            const bookBtns = document.querySelectorAll('.book-btn');
+            bookBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('secondary')) {
+                        // Toggle wishlist (heart)
+                        this.innerHTML = this.innerHTML === '♡' ? '♥' : '♡';
+                    } else {
+                        // Primary button (borrow/waitlist)
+                        const bookTitle = this.closest('.book').querySelector('h3').textContent;
+                        alert(`Action requested for "${bookTitle}"`);
+                    }
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            const searchButton = document.querySelector('.search-bar button');
+            
+            searchButton.addEventListener('click', function() {
+                performSearch();
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm === '') return;
+                
+                // In a real application, this would send a request to the server
+                // For demo purposes, we'll just show an alert
+                alert(`Searching for: "${searchTerm}"`);
+                
+                // You could implement actual search functionality here
+                // For example, filtering the displayed books based on the search term
+            }
+            
+            // Add smooth scrolling for navigation links
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Only prevent default if it's a hash link
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 100,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close mobile menu if open
+                            if (navLinks.classList.contains('active')) {
+                                navLinks.classList.remove('active');
+                                document.body.classList.remove('no-scroll');
+                                
+                                const lines = document.querySelectorAll('.hamburger .line');
+                                lines.forEach(line => line.classList.remove('active'));
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Logout button functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show confirmation dialog using Bootstrap
+                if (confirm('Are you sure you want to logout?')) {
+                    // In a real application, this would handle the logout process
+                    // For demo purposes, we'll just show an alert
+                    alert('You have been logged out successfully!');
+                    // Redirect to login page or home page
+                    // window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
