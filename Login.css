@@ -1,0 +1,161 @@
+/* Login Page Specific Styles */
+:root {
+  --primary-color: #2c3e50;
+  --accent-color: #3498db;
+  --error-color: #e74c3c;
+  --success-color: #2ecc71;
+  --light-bg: #ecf0f1;
+  --dark-text: #2c3e50;
+  --light-text: #ffffff;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--light-bg);
+  color: var(--dark-text);
+  line-height: 1.6;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Form Styles */
+.form-container {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 30px;
+  width: 100%;
+  max-width: 450px; /* Slightly smaller than register form */
+  margin: 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.logo {
+  font-size: 2.5rem;
+  margin-left: 15px;
+}
+
+h1 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+}
+
+h2 {
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+input {
+  width: 100%;
+  padding: 14px; /* Slightly larger input fields */
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: var(--light-text);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 14px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 14px;
+}
+
+.form-footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Alert Boxes */
+.alert-box {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  display: none;
+}
+
+.alert-box.error {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+}
+
+.alert-box.success {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+}
