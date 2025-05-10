@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deals & Discounts - BookHaven</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional styles for Deals & Discounts page */
+        .deal-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background-color: #fd7e14;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        
+        .discount-percentage {
+            font-weight: bold;
+            color: #fd7e14;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            margin-right: 10px;
+        }
+        
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #fd7e14;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .book {
+            position: relative;
+        }
+        
+        .book-cover {
+            min-height: 300px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .book-cover.no-image {
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .discount-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .discount-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .discount-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .discount-btn.active {
+            background-color: #fd7e14;
+            color: white;
+            border-color: #fd7e14;
+        }
+        
+        .deal-banner {
+            background-color: #fff3e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px dashed #fd7e14;
+        }
+        
+        .deal-banner h3 {
+            color: #fd7e14;
+            margin-bottom: 10px;
+        }
+        
+        .deal-banner p {
+            margin-bottom: 15px;
+        }
+        
+        .deal-banner-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #fd7e14;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .deal-banner-btn:hover {
+            background-color: #e96b02;
+            color: white;
+        }
+        
+        .deal-countdown {
+            background-color: #fff3e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px dashed #fd7e14;
+        }
+        
+        .countdown-title {
+            color: #fd7e14;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .countdown-box {
+            background-color: #fd7e14;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .countdown-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        
+        .featured-deals {
+            margin-bottom: 30px;
+        }
+        
+        .deal-of-the-day {
+            background-color: #fff3e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            border: 2px dashed #fd7e14;
+        }
+        
+        .deal-of-the-day-cover {
+            flex: 0 0 200px;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .deal-of-the-day-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .deal-of-the-day-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .deal-of-the-day-author {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        
+        .deal-of-the-day-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .deal-tag {
+            display: inline-block;
+            background-color: #fd7e14;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .coupon-code {
+            display: inline-block;
+            background-color: #f8f9fa;
+            border: 2px dashed #fd7e14;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Banner -->
+    <div class="announcement" id="announcement">
+        <div class="container">
+            <p>🎉 Summer Sale! Get 10% off on all books until June 30th. Use code: SUMMER10</p>
+            <button class="close-btn" id="close-announcement">&times;</button>
+        </div>
+    </div>
+
+ <header>
+        <div class="container">
+            <div class="logo">
+                <h1>BookHaven</h1>
+            </div>
+            <nav>
+                <div class="hamburger">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="categories.html" class="active">Categories</a></li>
+
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <button class="icon-btn" id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <a href="bookmark.html" class="icon-btn" id="wishlist-btn">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge">3</span>
+                    </a>
+
+                <a href="cart.html" class="icon-btn" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge">2</span>
+                </a>
+
+
+                <a href="#" class="logout-btn" id="logout-btn">
+                    <span class="logout-icon"></span>
+                    <span class="icon-text">Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="category-tabs">
+        <div class="container">
+            <div class="tabs-container">
+                <a href="categories.html" class="tab active">All Books</a>
+                <a href="bestsellers.html" class="tab">Bestsellers</a>
+                <a href="award-winners.html" class="tab">Award Winners</a>
+                <a href="new-releases.html" class="tab">New Releases</a>
+                <a href="new-arrivals.html" class="tab">New Arrivals</a>
+                <a href="comming-soon.html" class="tab">Coming Soon</a>
+                <a href="deals.html" class="tab">Deals</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-books">
+        <div class="container">
+            <h2 class="section-title">Deals & Discounts</h2>
+            
+            <!-- Deal Banner -->
+            <div class="deal-banner">
+                <h3>Summer Reading Sale!</h3>
+                <p>Enjoy exclusive discounts on a wide selection of books. Limited time offers - grab your favorites before they're gone!</p>
+                <div class="coupon-code">SUMMER10</div>
+                <p style="margin-top: 10px;">Use this code at checkout for an additional 10% off!</p>
+            </div>
+            
+            <!-- Countdown Timer -->
+            <div class="deal-countdown">
+                <div class="countdown-title">Summer Sale Ends In:</div>
+                <div class="countdown-timer">
+                    <div class="countdown-box">
+                        <div class="countdown-number">21</div>
+                        <div class="countdown-label">days</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-number">14</div>
+                        <div class="countdown-label">hours</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-number">36</div>
+                        <div class="countdown-label">mins</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-number">52</div>
+                        <div class="countdown-label">secs</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Deal of the Day -->
+            <h3 class="sub-section-title">Deal of the Day</h3>
+            <div class="deal-of-the-day">
+                <div class="deal-of-the-day-cover" style="background-image: url('https://source.unsplash.com/random/400x600/?book,bestseller')"></div>
+                <div class="deal-of-the-day-info">
+                    <div class="deal-tag">50% OFF</div>
+                    <h3 class="deal-of-the-day-title">The Midnight Library</h3>
+                    <div class="deal-of-the-day-author">By Matt Haig</div>
+                    <div class="deal-of-the-day-description">
+                        <p>Between life and death there is a library, and within that library, the shelves go on forever. Every book provides a chance to try another life you could have lived. To see how things would be if you had made other choices...</p>
+                    </div>
+                    <div class="book-meta" style="margin-bottom: 15px;">
+                        <div class="discount-percentage">50% OFF</div>
+                        <div><span class="original-price">$24.99</span> $12.50</div>
+                    </div>
+                    <div class="book-actions">
+                        <div class="book-btn primary">Add to Cart</div>
+                        <div class="book-btn secondary">♡</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Discount Filter -->
+            <div class="discount-filter">
+                <div class="discount-btn active">All Deals</div>
+                <div class="discount-btn">Under $10</div>
+                <div class="discount-btn">10-25% Off</div>
+                <div class="discount-btn">25-50% Off</div>
+                <div class="discount-btn">Over 50% Off</div>
+                <div class="discount-btn">Bundle Deals</div>
+            </div>
+            
+            <!-- Books Grid - Static Content for Demo -->
+            <div id="books-container">
+                <div class="books-grid">
+                    <!-- Book 1 -->
+                    <div class="book" data-id="1">
+                        <div class="deal-badge">25% OFF</div>
+                        <div class="book-category">Hardcover</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,fantasy')"></div>
+                        <div class="book-info">
+                            <h3>The Dragon's Crown</h3>
+                            <p>Richard Blackwood</p>
+                            <div class="book-meta">
+                                <div>Fantasy</div>
+                                <div class="discount-percentage">25% OFF</div>
+                                <div><span class="original-price">$26.99</span> $20.24</div>
+                            </div>
+                            <div class="book-status available">In Stock (8)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 2 -->
+                    <div class="book" data-id="2">
+                        <div class="deal-badge">30% OFF</div>
+                        <div class="book-category">Paperback</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,mystery')"></div>
+                        <div class="book-info">
+                            <h3>The Silent Detective</h3>
+                            <p>Alexandra Morgan</p>
+                            <div class="book-meta">
+                                <div>Mystery</div>
+                                <div class="discount-percentage">30% OFF</div>
+                                <div><span class="original-price">$18.99</span> $13.29</div>
+                            </div>
+                            <div class="book-status available">In Stock (12)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 3 -->
+                    <div class="book" data-id="3">
+                        <div class="deal-badge">15% OFF</div>
+                        <div class="book-category">Hardcover</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,scifi')"></div>
+                        <div class="book-info">
+                            <h3>Quantum Paradox</h3>
+                            <p>Nathan Chen</p>
+                            <div class="book-meta">
+                                <div>Science Fiction</div>
+                                <div class="discount-percentage">15% OFF</div>
+                                <div><span class="original-price">$24.95</span> $21.21</div>
+                            </div>
+                            <div class="book-status available">In Stock (5)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 4 -->
+                    <div class="book" data-id="4">
+                        <div class="deal-badge">40% OFF</div>
+                        <div class="book-category">Paperback</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,romance')"></div>
+                        <div class="book-info">
+                            <h3>Summer in Paris</h3>
+                            <p>Olivia Williams</p>
+                            <div class="book-meta">
+                                <div>Romance</div>
+                                <div class="discount-percentage">40% OFF</div>
+                                <div><span class="original-price">$16.99</span> $10.19</div>
+                            </div>
+                            <div class="book-status available">In Stock (15)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 5 -->
+                    <div class="book" data-id="5">
+                        <div class="deal-badge">20% OFF</div>
+                        <div class="book-category">Hardcover</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,history')"></div>
+                        <div class="book-info">
+                            <h3>The Lost Empire</h3>
+                            <p>Marcus Johnson</p>
+                            <div class="book-meta">
+                                <div>Historical Fiction</div>
+                                <div class="discount-percentage">20% OFF</div>
+                                <div><span class="original-price">$27.50</span> $22.00</div>
+                            </div>
+                            <div class="book-status available">In Stock (3)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 6 -->
+                    <div class="book" data-id="6">
+                        <div class="deal-badge">50% OFF</div>
+                        <div class="book-category">Paperback</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,biography')"></div>
+                        <div class="book-info">
+                            <h3>Uncharted Waters: A Memoir</h3>
+                            <p>Sarah Thompson</p>
+                            <div class="book-meta">
+                                <div>Biography</div>
+                                <div class="discount-percentage">50% OFF</div>
+                                <div><span class="original-price">$19.95</span> $9.98</div>
+                            </div>
+                            <div class="book-status available">In Stock (7)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 7 -->
+                    <div class="book" data-id="7">
+                        <div class="deal-badge">35% OFF</div>
+                        <div class="book-category">Hardcover</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,thriller')"></div>
+                        <div class="book-info">
+                            <h3>The Last Betrayal</h3>
+                            <p>Michael Reynolds</p>
+                            <div class="book-meta">
+                                <div>Thriller</div>
+                                <div class="discount-percentage">35% OFF</div>
+                                <div><span class="original-price">$23.99</span> $15.59</div>
+                            </div>
+                            <div class="book-status available">In Stock (4)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 8 -->
+                    <div class="book" data-id="8">
+                        <div class="deal-badge">25% OFF</div>
+                        <div class="book-category">Paperback</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,selfhelp')"></div>
+                        <div class="book-info">
+                            <h3>Mindful Living</h3>
+                            <p>Jennifer Lee</p>
+                            <div class="book-meta">
+                                <div>Self-Help</div>
+                                <div class="discount-percentage">25% OFF</div>
+                                <div><span class="original-price">$17.95</span> $13.46</div>
+                            </div>
+                            <div class="book-status available">In Stock (20)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 9 -->
+                    <div class="book" data-id="9">
+                        <div class="deal-badge">45% OFF</div>
+                        <div class="book-category">Hardcover</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,cooking')"></div>
+                        <div class="book-info">
+                            <h3>Global Flavors</h3>
+                            <p>Chef Maria Garcia</p>
+                            <div class="book-meta">
+                                <div>Cooking</div>
+                                <div class="discount-percentage">45% OFF</div>
+                                <div><span class="original-price">$29.99</span> $16.49</div>
+                            </div>
+                            <div class="book-status available">In Stock (6)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 10 -->
+                    <div class="book" data-id="10">
+                        <div class="deal-badge">60% OFF</div>
+                        <div class="book-category">Paperback</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,poetry')"></div>
+                        <div class="book-info">
+                            <h3>Whispers of the Soul</h3>
+                            <p>Emily Davis</p>
+                            <div class="book-meta">
+                                <div>Poetry</div>
+                                <div class="discount-percentage">60% OFF</div>
+                                <div><span class="original-price">$14.95</span> $5.98</div>
+                            </div>
+                            <div class="book-status available">In Stock (9)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 11 -->
+                    <div class="book" data-id="11">
+                        <div class="deal-badge">Bundle Deal</div>
+                        <div class="book-category">Paperback Set</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,fantasy,series')"></div>
+                        <div class="book-info">
+                            <h3>The Chronicles of Eldoria (Complete Series)</h3>
+                            <p>Thomas Walker</p>
+                            <div class="book-meta">
+                                <div>Fantasy Series (5 Books)</div>
+                                <div class="discount-percentage">30% OFF</div>
+                                <div><span class="original-price">$89.95</span> $62.97</div>
+                            </div>
+                            <div class="book-status available">In Stock (2)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 12 -->
+                    <div class="book" data-id="12">
+                        <div class="deal-badge">Buy 1 Get 1</div>
+                        <div class="book-category">Paperback</div>
+                        <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/300x450/?book,children')"></div>
+                        <div class="book-info">
+                            <h3>Adventures in Wonderland</h3>
+                            <p>Lisa Johnson</p>
+                            <div class="book-meta">
+                                <div>Children's</div>
+                                <div class="discount-percentage">Buy 1 Get 1 Free</div>
+                                <div>$12.99</div>
+                            </div>
+                            <div class="book-status available">In Stock (15)</div>
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination">
+                    <a href="#" class="pagination-item">&laquo; Prev</a>
+                    <a href="#" class="pagination-item active">1</a>
+                    <a href="#" class="pagination-item">2</a>
+                    <a href="#" class="pagination-item">3</a>
+                    <a href="#" class="pagination-item">Next &raquo;</a>
+                </div>
+            </div>
+            
+            <!-- Special Offers Section -->
+            <div style="margin-top: 50px;">
+                <h2 class="section-title">Special Offers</h2>
+                
+                <div class="books-grid">
+                    <!-- Special Offer 1 -->
+                    <div class="book" data-id="so1" style="grid-column: span 2;">
+                        <div class="deal-badge">Limited Time</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; background-color: #fff3e0; padding: 20px; border-radius: 8px; border: 2px dashed #fd7e14;">
+                            <div style="flex: 0 0 120px;">
+                                <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/240x360/?book,boxset'); min-height: 180px;"></div>
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <h3 style="margin-bottom: 10px;">Mystery Book Box</h3>
+                                <p style="margin-bottom: 15px;">Receive 5 mystery books curated based on your reading preferences. Perfect for discovering new authors and titles!</p>
+                                <div class="discount-percentage">40% OFF</div>
+                                <div><span class="original-price">$99.99</span> $59.99</div>
+                                <div class="book-actions" style="margin-top: 15px;">
+                                    <div class="book-btn primary">Add to Cart</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Special Offer 2 -->
+                    <div class="book" data-id="so2" style="grid-column: span 2;">
+                        <div class="deal-badge">Member Exclusive</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; background-color: #fff3e0; padding: 20px; border-radius: 8px; border: 2px dashed #fd7e14;">
+                            <div style="flex: 0 0 120px;">
+                                <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/240x360/?book,subscription'); min-height: 180px;"></div>
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <h3 style="margin-bottom: 10px;">Annual Membership Discount</h3>
+                                <p style="margin-bottom: 15px;">Sign up for an annual membership and get 20% off all purchases for a full year, plus exclusive access to member-only sales!</p>
+                                <div class="discount-percentage">Save $50</div>
+                                <div><span class="original-price">$149.99</span> $99.99</div>
+                                <div class="book-actions" style="margin-top: 15px;">
+                                    <div class="book-btn primary">Sign Up Now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About BookHaven</h3>
+                    <p>BookHaven is a private book library store dedicated to providing quality books and exceptional service to our members. We've expanded our reach to offer online browsing and ordering with in-store pickup.</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="books.html">Books</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="new-releases.html">New Releases</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><span>Address:</span> 123 Book Street, Literary Lane</p>
+                    <p><span>Phone:</span> (123) 456-7890</p>
+                    <p><span>Email:</span> info@bookhaven.com</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BookHaven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-cart">&times;</span>
+            <div class="modal-header">
+                <h3>Your Cart</h3>
+            </div>
+            <div class="modal-body">
+                <div class="cart-items">
+                    <div class="cart-item">
+                        <img src="https://source.unsplash.com/random/60x80/?book,gatsby" alt="Book cover" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">The Great Gatsby</div>
+                            <div class="cart-item-price">$19.99</div>
+                        </div>
+                        <div class="cart-item-remove">&times;</div>
+                    </div>
+                    <div class="cart-item">
+                        <img src="https://source.unsplash.com/random/60x80/?book,hobbit" alt="Book cover" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">The Hobbit</div>
+                            <div class="cart-item-price">$19.54</div>
+                        </div>
+                        <div class="cart-item-remove">&times;</div>
+                    </div>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span>$39.53</span>
+                </div>
+                <div class="discount-info">You're eligible for a 5% discount on this order!</div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary">Continue Shopping</button>
+                <button class="modal-btn primary">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+        <script src="scripts.js"></script>
+
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize page navigation
+            initNavigation();
+            
+            // Initialize other UI elements
+            initUI();
+            
+            // Initialize discount filter
+            initDiscountFilter();
+            
+            // Initialize countdown timer
+            initCountdownTimer();
+        });
+        
+        // Initialize UI elements
+        function initUI() {
+            // Close announcement banner
+            const closeAnnouncementBtn = document.getElementById('close-announcement');
+            if (closeAnnouncementBtn) {
+                closeAnnouncementBtn.addEventListener('click', function() {
+                    document.getElementById('announcement').style.display = 'none';
+                });
+            }
+            
+            // Cart modal
+            const cartBtn = document.getElementById('cart-btn');
+            const closeCartBtn = document.getElementById('close-cart');
+            const cartModal = document.getElementById('cart-modal');
+            
+            if (cartBtn && closeCartBtn && cartModal) {
+                cartBtn.addEventListener('click', function() {
+                    cartModal.style.display = 'flex';
+                });
+                
+                closeCartBtn.addEventListener('click', function() {
+                    cartModal.style.display = 'none';
+                });
+                
+                window.addEventListener('click', function(event) {
+                    if (event.target === cartModal) {
+                        cartModal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Add to cart buttons
+            const addToCartButtons = document.querySelectorAll('.book-btn.primary');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const bookId = this.closest('.book').dataset.id;
+                    console.log(`Adding book ID ${bookId} to cart`);
+                    cartModal.style.display = 'flex';
+                });
+            });
+            
+            // Wishlist buttons
+            const wishlistButtons = document.querySelectorAll('.book-btn.secondary');
+            wishlistButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const bookId = this.closest('.book').dataset.id;
+                    console.log(`Adding book ID ${bookId} to wishlist`);
+                    this.innerHTML = '❤️'; // Change heart to filled
+                });
+            });
+        }
+        
+        // Function to initialize navigation
+        function initNavigation() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+        }
+        
+        // Function to initialize discount filter
+        function initDiscountFilter() {
+            const discountButtons = document.querySelectorAll('.discount-btn');
+            
+            discountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    discountButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // In a real app, you would filter the books based on the selected discount
+                    console.log(`Filtering by: ${this.textContent}`);
+                });
+            });
+        }
+        
+        // Function to initialize countdown timer
+        function initCountdownTimer() {
+            // Set the date we're counting down to
+            const countdownDate = new Date();
+            countdownDate.setDate(countdownDate.getDate() + 21); // 21 days from now
+            
+            // Update the countdown every 1 second
+            const countdownTimer = setInterval(function() {
+                // Get current date and time
+                const now = new Date().getTime();
+                
+                // Find the distance between now and the countdown date
+                const distance = countdownDate - now;
+                
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Display the result
+                document.querySelector('.countdown-box:nth-child(1) .countdown-number').textContent = days;
+                document.querySelector('.countdown-box:nth-child(2) .countdown-number').textContent = hours;
+                document.querySelector('.countdown-box:nth-child(3) .countdown-number').textContent = minutes;
+                document.querySelector('.countdown-box:nth-child(4) .countdown-number').textContent = seconds;
+                
+                // If the countdown is finished, display expired message
+                if (distance < 0) {
+                    clearInterval(countdownTimer);
+                    document.querySelector('.countdown-timer').innerHTML = "EXPIRED";
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Books - BookHaven</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional styles for loading state and error messages */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .book-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background-color: #ffc107;
+            color: #343a40;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        
+        .book {
+            position: relative;
+        }
+        
+        .book-badges {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .badge-bestseller {
+            background-color: #ffc107;
+            color: #343a40;
+        }
+        
+        .badge-award {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .badge-new {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .book-cover {
+            min-height: 300px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .book-cover.no-image {
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Banner -->
+    <div class="announcement" id="announcement">
+        <div class="container">
+            <p>🎉 Summer Sale! Get 10% off on all books until June 30th. Use code: SUMMER10</p>
+            <button class="close-btn" id="close-announcement">&times;</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>BookHaven</h1>
+            </div>
+            <nav>
+                <div class="hamburger">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="categories.html" class="active">Categories</a></li>
+
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <button class="icon-btn" id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <a href="bookmark.html" class="icon-btn" id="wishlist-btn">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge">3</span>
+                    </a>
+
+                <a href="cart.html" class="icon-btn" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge">2</span>
+                </a>
+
+
+                <a href="#" class="logout-btn" id="logout-btn">
+                    <span class="logout-icon"></span>
+                    <span class="icon-text">Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="category-tabs">
+        <div class="container">
+            <div class="tabs-container">
+                <a href="categories.html" class="tab active">All Books</a>
+                <a href="bestsellers.html" class="tab">Bestsellers</a>
+                <a href="award-winners.html" class="tab">Award Winners</a>
+                <a href="new-releases.html" class="tab">New Releases</a>
+                <a href="new-arrivals.html" class="tab">New Arrivals</a>
+                <a href="comming-soon.html" class="tab">Coming Soon</a>
+                <a href="deals.html" class="tab">Deals</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-books">
+        <div class="container">
+            <h2 class="section-title">All Books</h2>
+            
+            <div class="filter-section" id="filter-section">
+                <div class="filter-header">
+                    <h3 class="filter-title">Filter Books</h3>
+                    <button class="filter-toggle" id="filter-toggle">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+                <div class="filter-content" id="filter-content">
+                    <div class="filter-group">
+                        <h4>Category</h4>
+                        <div class="filter-options">
+                            <input type="checkbox" id="fiction" class="filter-checkbox">
+                            <label for="fiction" class="filter-label">Fiction</label>
+                            
+                            <input type="checkbox" id="nonfiction" class="filter-checkbox">
+                            <label for="nonfiction" class="filter-label">Non-Fiction</label>
+                            
+                            <input type="checkbox" id="mystery" class="filter-checkbox">
+                            <label for="mystery" class="filter-label">Mystery</label>
+                            
+                            <input type="checkbox" id="scifi" class="filter-checkbox">
+                            <label for="scifi" class="filter-label">Sci-Fi</label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Author</h4>
+                        <div class="filter-options">
+                            <input type="checkbox" id="author1" class="filter-checkbox">
+                            <label for="author1" class="filter-label">J.K. Rowling</label>
+                            
+                            <input type="checkbox" id="author2" class="filter-checkbox">
+                            <label for="author2" class="filter-label">George R.R. Martin</label>
+                            
+                            <input type="checkbox" id="author3" class="filter-checkbox">
+                            <label for="author3" class="filter-label">Stephen King</label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Price Range</h4>
+                        <div class="price-range">
+                            <input type="number" class="price-input" placeholder="Min" min="0">
+                            <span>to</span>
+                            <input type="number" class="price-input" placeholder="Max" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Format</h4>
+                        <div class="filter-options">
+                            <input type="checkbox" id="paperback" class="filter-checkbox">
+                            <label for="paperback" class="filter-label">Paperback</label>
+                            
+                            <input type="checkbox" id="hardcover" class="filter-checkbox">
+                            <label for="hardcover" class="filter-label">Hardcover</label>
+                            
+                            <input type="checkbox" id="signed" class="filter-checkbox">
+                            <label for="signed" class="filter-label">Signed</label>
+                            
+                            <input type="checkbox" id="limited" class="filter-checkbox">
+                            <label for="limited" class="filter-label">Limited Edition</label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Rating</h4>
+                        <div class="filter-options">
+                            <input type="checkbox" id="rating5" class="filter-checkbox">
+                            <label for="rating5" class="filter-label">5 Stars</label>
+                            
+                            <input type="checkbox" id="rating4" class="filter-checkbox">
+                            <label for="rating4" class="filter-label">4+ Stars</label>
+                            
+                            <input type="checkbox" id="rating3" class="filter-checkbox">
+                            <label for="rating3" class="filter-label">3+ Stars</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="filter-btn reset">Reset Filters</button>
+                    <button class="filter-btn apply">Apply Filters</button>
+                </div>
+            </div>
+            
+            <!-- Books Grid - Dynamic Content -->
+            <div id="books-container">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination-container" id="pagination-container">
+                <!-- Pagination will be inserted here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About BookHaven</h3>
+                    <p>BookHaven is a private book library store dedicated to providing quality books and exceptional service to our members. We've expanded our reach to offer online browsing and ordering with in-store pickup.</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="books.html">Books</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="new-releases.html">New Releases</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><span>Address:</span> 123 Book Street, Literary Lane</p>
+                    <p><span>Phone:</span> (123) 456-7890</p>
+                    <p><span>Email:</span> info@bookhaven.com</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BookHaven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize page navigation
+            initNavigation();
+            
+            // Fetch books data from API
+            fetchBooks();
+            
+            // Initialize other UI elements
+            initUI();
+        });
+        
+        // Function to fetch books from the API
+        function fetchBooks(page = 1) {
+            const booksContainer = document.getElementById('books-container');
+            const paginationContainer = document.getElementById('pagination-container');
+            
+            // Show loading spinner
+            booksContainer.innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            // Fetch books from API
+            fetch('http://localhost:5085/api/Book/GetAllBooks')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Render books
+                    renderBooks(data.data);
+                    
+                    // Render pagination if needed
+                    if (data.recordsTotal > 12) {
+                        renderPagination(data.recordsTotal, page);
+                    } else {
+                        paginationContainer.innerHTML = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching books:', error);
+                    booksContainer.innerHTML = `
+                        <div class="error-message">
+                            <h4>Oops! Something went wrong</h4>
+                            <p>We couldn't load the books. Please try again later.</p>
+                            <button class="filter-btn apply" onclick="fetchBooks()">Try Again</button>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Function to render books to the page
+        function renderBooks(books) {
+            const booksContainer = document.getElementById('books-container');
+            
+            if (!books || books.length === 0) {
+                booksContainer.innerHTML = `
+                    <div class="error-message">
+                        <h4>No books found</h4>
+                        <p>We couldn't find any books matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create grid container
+            let booksGrid = document.createElement('div');
+            booksGrid.className = 'books-grid';
+            
+            // Loop through books and create book cards
+            books.forEach(book => {
+                // Create book badges HTML
+                let badgesHTML = '';
+                if (book.isBestseller) {
+                    badgesHTML += '<div class="book-badge badge-bestseller">Bestseller</div>';
+                }
+                if (book.isAwardWinner) {
+                    badgesHTML += '<div class="book-badge badge-award">Award Winner</div>';
+                }
+                if (book.isNewRelease) {
+                    badgesHTML += '<div class="book-badge badge-new">New Release</div>';
+                }
+                
+                // Format price
+                const formattedPrice = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(book.price);
+                
+                // Format publication date
+                const publicationDate = new Date(book.publicationDate);
+                const formattedDate = publicationDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // Create availability status
+                const stockStatus = book.inventory && book.inventory.isAvailable 
+                    ? `<div class="book-status available">In Stock (${book.inventory.quantityInStock})</div>`
+                    : '<div class="book-status unavailable">Out of Stock</div>';
+                
+                // Create book cover background
+                const coverStyle = book.coverImageUrl 
+                    ? `background-image: url('${book.coverImageUrl}')`
+                    : '';
+                
+                const coverClass = book.coverImageUrl 
+                    ? 'book-cover'
+                    : 'book-cover no-image';
+                
+                const coverContent = book.coverImageUrl 
+                    ? ''
+                    : book.title;
+                
+                // Create book card HTML
+                const bookCard = `
+                    <div class="book" data-id="${book.id}">
+                        ${badgesHTML ? `<div class="book-badges">${badgesHTML}</div>` : ''}
+                        <div class="book-category">${book.format || 'Book'}</div>
+                        <div class="${coverClass}" style="${coverStyle}">
+                            ${coverContent}
+                        </div>
+                        <div class="book-info">
+                            <h3>${book.title}</h3>
+                            <p>${book.authorName}</p>
+                            <div class="book-meta">
+                                <div>Published: ${formattedDate}</div>
+                                <div>${formattedPrice}</div>
+                            </div>
+                            ${stockStatus}
+                            <div class="book-actions">
+                                <div class="book-btn primary">Add to Cart</div>
+                                <div class="book-btn secondary">♡</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add book card to grid
+                booksGrid.innerHTML += bookCard;
+            });
+            
+            // Replace loading spinner with books grid
+            booksContainer.innerHTML = '';
+            booksContainer.appendChild(booksGrid);
+            
+            // Add event listeners to book cards
+            addBookEventListeners();
+        }
+        
+        // Function to add event listeners to book cards
+        function addBookEventListeners() {
+            // Add to cart buttons
+            const addToCartButtons = document.querySelectorAll('.book-btn.primary');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const bookId = this.closest('.book').dataset.id;
+                    addToCart(bookId);
+                });
+            });
+            
+            // Wishlist buttons
+            const wishlistButtons = document.querySelectorAll('.book-btn.secondary');
+            wishlistButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const bookId = this.closest('.book').dataset.id;
+                    addToWishlist(bookId);
+                    this.innerHTML = '❤️'; // Change heart to filled
+                });
+            });
+        }
+        
+        // Function to render pagination
+        function renderPagination(totalRecords, currentPage) {
+            const paginationContainer = document.getElementById('pagination-container');
+            const totalPages = Math.ceil(totalRecords / 12); // Assuming 12 books per page
+            
+            let paginationHTML = '<div class="pagination">';
+            
+            // Previous button
+            if (currentPage > 1) {
+                paginationHTML += `<a href="#" class="pagination-item" data-page="${currentPage - 1}">&laquo; Prev</a>`;
+            }
+            
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<a href="#" class="pagination-item active">${i}</a>`;
+                } else {
+                    paginationHTML += `<a href="#" class="pagination-item" data-page="${i}">${i}</a>`;
+                }
+            }
+            
+            // Next button
+            if (currentPage < totalPages) {
+                paginationHTML += `<a href="#" class="pagination-item" data-page="${currentPage + 1}">Next &raquo;</a>`;
+            }
+            
+            paginationHTML += '</div>';
+            paginationContainer.innerHTML = paginationHTML;
+            
+            // Add event listeners to pagination
+            const paginationItems = document.querySelectorAll('.pagination-item');
+            paginationItems.forEach(item => {
+                if (item.dataset.page) {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        fetchBooks(parseInt(this.dataset.page, 10));
+                    });
+                }
+            });
+        }
+        
+        
+        // Initialize UI elements
+        function initUI() {
+            // Close announcement banner
+            const closeAnnouncementBtn = document.getElementById('close-announcement');
+            if (closeAnnouncementBtn) {
+                closeAnnouncementBtn.addEventListener('click', function() {
+                    document.getElementById('announcement').style.display = 'none';
+                });
+            }
+            
+            // Filter toggle
+            const filterToggleBtn = document.getElementById('filter-toggle');
+            if (filterToggleBtn) {
+                filterToggleBtn.addEventListener('click', function() {
+                    const filterContent = document.getElementById('filter-content');
+                    filterContent.classList.toggle('active');
+                    this.querySelector('i').classList.toggle('fa-chevron-down');
+                    this.querySelector('i').classList.toggle('fa-chevron-up');
+                });
+            }
+            
+            // Cart modal
+            const cartBtn = document.getElementById('cart-btn');
+            const closeCartBtn = document.getElementById('close-cart');
+            const cartModal = document.getElementById('cart-modal');
+            
+            if (cartBtn && closeCartBtn && cartModal) {
+                cartBtn.addEventListener('click', function() {
+                    cartModal.style.display = 'flex';
+                });
+                
+                closeCartBtn.addEventListener('click', function() {
+                    cartModal.style.display = 'none';
+                });
+                
+                window.addEventListener('click', function(event) {
+                    if (event.target === cartModal) {
+                        cartModal.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        // Function to initialize navigation
+        function initNavigation() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+            
+            // Set active tab based on current page
+            const categoryTabs = document.querySelectorAll('.category-tabs .tab');
+            const currentPath = window.location.pathname;
+            
+            categoryTabs.forEach(tab => {
+                const tabPath = tab.getAttribute('href');
+                if (currentPath.includes(tabPath)) {
+                    // Remove active class from all tabs
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to current tab
+                    tab.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
