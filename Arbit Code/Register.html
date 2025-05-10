@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookHaven Library - Register</title>
+    <link rel="stylesheet" href="Register.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-container">
+        <div class="logo-container">
+          <h1>BookHaven Library</h1>
+          <div class="logo">📚</div>
+        </div>
+
+        <h2>Create an Account</h2>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="example@gmail.com"
+            />
+            <small>Must be a Gmail address</small>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+            <small
+              >Min. 8 characters, include numbers and special characters</small
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              required
+              placeholder="10 digits only"
+            />
+            <small>Must be exactly 10 digits</small>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" required></textarea>
+          </div>
+
+          <div class="alert-box error" id="errorMessage"></div>
+          <div class="alert-box success" id="successMessage"></div>
+
+          <div class="form-group">
+            <button type="submit" class="btn-primary">Register</button>
+          </div>
+
+          <div class="form-footer">
+            Already have an account? <a href="login.html">Login here</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="Register.js"></script>
+  </body>
+</html>
