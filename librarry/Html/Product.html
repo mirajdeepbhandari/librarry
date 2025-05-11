@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Haven Library</title>
+    <link rel="stylesheet" href="../Css/Product.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Book Haven Library</h1>
+
+      <div id="form-section">
+        <h2>Add / Edit Book</h2>
+        <form id="book-form">
+          <input type="hidden" id="book-id" />
+          <label>ISBN: <input type="text" id="isbn" required /></label>
+          <label>Title: <input type="text" id="title" required /></label>
+          <label>Description: <textarea id="description"></textarea></label>
+          <label>Author Name: <input type="text" id="authorName" /></label>
+          <label
+            >Publisher Name: <input type="text" id="publisherName"
+          /></label>
+          <label>Price: <input type="number" step="0.01" id="price" /></label>
+          <label>Format: <input type="text" id="format" /></label>
+          <label>Language: <input type="text" id="language" /></label>
+          <label
+            >Publication Date: <input type="date" id="publicationDate"
+          /></label>
+          <label>Page Count: <input type="number" id="pageCount" /></label>
+          <label
+            ><input type="checkbox" id="isBestseller" /> Is Bestseller</label
+          >
+          <label
+            ><input type="checkbox" id="isAwardWinner" /> Is Award Winner</label
+          >
+          <label
+            ><input type="checkbox" id="isNewRelease" /> Is New Release</label
+          >
+          <label
+            >Cover Image: <input type="file" id="coverImage" accept="image/*"
+          /></label>
+          <label
+            ><input type="checkbox" id="isActive" checked /> Is Active</label
+          >
+          <button type="submit">Save Book</button>
+          <button type="button" id="cancel-btn">Cancel</button>
+        </form>
+      </div>
+
+      <div id="table-section">
+        <h2>Books List</h2>
+        <input type="text" id="search-input" placeholder="Search books..." />
+        <table id="books-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>ISBN</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="pagination">
+          <button id="prev-page">Previous</button>
+          <span id="current-page">1</span>
+          <button id="next-page">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/Js/Product.js"></script>
+  </body>
+</html>
