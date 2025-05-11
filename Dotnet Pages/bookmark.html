@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookmarks - BookHaven</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e67e22;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #777;
+            --border-color: #ddd;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 10px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .hamburger .line {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* User Actions */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Logout Button Styles */
+        .logout-btn {
+            background: linear-gradient(135deg, var(--secondary-color), #d35400);
+            color: white !important;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #d35400, var(--secondary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Page Header */
+        .page-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .page-header h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Bookmarks Section */
+        .bookmarks-section {
+            padding: 60px 0;
+        }
+
+        .bookmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        /* Book Card Styling */
+        .book {
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        .book:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-cover {
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .book:hover .book-cover::after {
+            opacity: 1;
+        }
+
+        .book-info {
+            padding: 20px;
+            position: relative;
+        }
+
+        .book h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .book:hover h3 {
+            color: var(--secondary-color);
+        }
+
+        .book p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .book-rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .book-rating span {
+            color: #f39c12;
+            margin-right: 5px;
+        }
+
+        .book-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .book-status.available {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .book-status.borrowed {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .book-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .book-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .book-btn.primary {
+            background-color: var(--secondary-color);
+            color: white;
+            flex: 1;
+        }
+
+        .book-btn.primary:hover {
+            background-color: #d35400;
+        }
+
+        .book-btn.secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            margin-left: 10px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-btn.secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Book Category Tag */
+        .book-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        /* Sale Badge */
+        .sale-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--danger-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            transform: rotate(5deg);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empty-state-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state-btn:hover {
+            background-color: #d35400;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Bookmark Actions */
+        .bookmark-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .bookmark-count {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .bookmark-count span {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .bookmark-sort {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bookmark-sort label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .bookmark-sort select {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .bookmark-sort select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        /* Remove Bookmark Button */
+        .remove-bookmark {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--danger-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .book:hover .remove-bookmark {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .remove-bookmark:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .footer-section p {
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+
+        .footer-section.links ul {
+            list-style: none;
+        }
+
+        .footer-section.links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section.links a {
+            color: #bdc3c7;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section.links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer-section.contact span {
+            font-weight: 600;
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .social-icon:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Hamburger Menu Animation */
+        .hamburger .line.active:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger .line.active:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger .line.active:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .bookmarks-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .user-actions {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bookmarks-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hamburger {
+                display: block;
+                z-index: 1001;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.5s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .bookmark-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .user-actions {
+                position: absolute;
+                top: 15px;
+                right: 70px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .bookmarks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-actions .icon-text {
+                display: none;
+            }
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn.primary:hover {
+            background-color: #d35400;
+        }
+
+        .modal-btn.secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn.secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Cart Modal Specific Styles */
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-remove {
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-item-remove:hover {
+            transform: scale(1.2);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .discount-info {
+            font-size: 0.9rem;
+            color: var(--success-color);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="page-header">
+        <div class="container">
+            <h2>My Bookmarks</h2>
+            <p>Your collection of favorite books saved for later.</p>
+        </div>
+    </section>
+
+    <section class="bookmarks-section">
+        <div class="container">
+            <div class="bookmark-actions">
+                <div class="bookmark-count">
+                    You have <span>8</span> bookmarked books
+                </div>
+                <div class="bookmark-sort">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by">
+                        <option value="date-added">Date Added (Newest First)</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="author">Author (A-Z)</option>
+                        <option value="price-low">Price (Low to High)</option>
+                        <option value="price-high">Price (High to Low)</option>
+                        <option value="rating">Rating (Highest First)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bookmarks-grid">
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Fiction</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,gatsby')"></div>
+                    <div class="book-info">
+                        <h3>The Great Gatsby</h3>
+                        <p>F. Scott Fitzgerald</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★☆</span> 4.5
+                            </div>
+                            <div>$19.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Classic</div>
+                    <div class="sale-badge">20% OFF</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,mockingbird')"></div>
+                    <div class="book-info">
+                        <h3>To Kill a Mockingbird</h3>
+                        <p>Harper Lee</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★★</span> 4.8
+                            </div>
+                            <div><s>$24.99</s> $19.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Dystopian</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,1984')"></div>
+                    <div class="book-info">
+                        <h3>1984</h3>
+                        <p>George Orwell</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★☆</span> 4.6
+                            </div>
+                            <div>$15.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Romance</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,pride')"></div>
+                    <div class="book-info">
+                        <h3>Pride and Prejudice</h3>
+                        <p>Jane Austen</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★☆</span> 4.7
+                            </div>
+                            <div>$14.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Fantasy</div>
+                    <div class="sale-badge">15% OFF</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,hobbit')"></div>
+                    <div class="book-info">
+                        <h3>The Hobbit</h3>
+                        <p>J.R.R. Tolkien</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★★</span> 4.9
+                            </div>
+                            <div><s>$22.99</s> $19.54</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Thriller</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,thriller')"></div>
+                    <div class="book-info">
+                        <h3>The Silent Patient</h3>
+                        <p>Alex Michaelides</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★☆</span> 4.5
+                            </div>
+                            <div>$26.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Science Fiction</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,scifi')"></div>
+                    <div class="book-info">
+                        <h3>Dune</h3>
+                        <p>Frank Herbert</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★★</span> 4.8
+                            </div>
+                            <div>$22.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book">
+                    <div class="remove-bookmark" title="Remove from bookmarks">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="book-category">Biography</div>
+                    <div class="book-cover" style="background-image: url('https://source.unsplash.com/random/200x300/?book,biography')"></div>
+                    <div class="book-info">
+                        <h3>Becoming</h3>
+                        <p>Michelle Obama</p>
+                        <div class="book-meta">
+                            <div class="book-rating">
+                                <span>★★★★☆</span> 4.6
+                            </div>
+                            <div>$32.99</div>
+                        </div>
+                        <div class="book-status available">In Stock</div>
+                        <div class="book-actions">
+                            <div class="book-btn primary">Add to Cart</div>
+                            <div class="book-btn secondary">♥</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty state (hidden by default, shown when no bookmarks) -->
+            <div class="empty-state" style="display: none;">
+                <div class="empty-state-icon">
+                    <i class="far fa-heart"></i>
+                </div>
+                <h3>No Bookmarks Yet</h3>
+                <p>You haven't bookmarked any books yet. Browse our collection and click the heart icon to save books for later.</p>
+                <a href="index.html" class="empty-state-btn">Browse Books</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About BookHaven</h3>
+                    <p>BookHaven is a private book library store dedicated to providing quality books and exceptional service to our members. We've expanded our reach to offer online browsing and ordering with in-store pickup.</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="books.html">Books</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="new-releases.html">New Releases</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><span>Address:</span> 123 Book Street, Literary Lane</p>
+                    <p><span>Phone:</span> (123) 456-7890</p>
+                    <p><span>Email:</span> info@bookhaven.com</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BookHaven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-cart">&times;</span>
+            <div class="modal-header">
+                <h3>Your Cart</h3>
+            </div>
+            <div class="modal-body">
+                <div class="cart-items">
+                    <div class="cart-item">
+                        <img src="https://source.unsplash.com/random/60x80/?book,gatsby" alt="Book cover" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">The Great Gatsby</div>
+                            <div class="cart-item-price">$19.99</div>
+                        </div>
+                        <div class="cart-item-remove">&times;</div>
+                    </div>
+                    <div class="cart-item">
+                        <img src="https://source.unsplash.com/random/60x80/?book,hobbit" alt="Book cover" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">The Hobbit</div>
+                            <div class="cart-item-price">$19.54</div>
+                        </div>
+                        <div class="cart-item-remove">&times;</div>
+                    </div>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span>$39.53</span>
+                </div>
+                <div class="discount-info">You're eligible for a 5% discount on this order!</div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary">Continue Shopping</button>
+                <button class="modal-btn primary">Checkout</button>
+            </div>
+        </div>
+    </div>
+<script src="scripts.js"></script>
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Navigation Toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
+                
+                // Animate hamburger to X
+                const lines = document.querySelectorAll('.hamburger .line');
+                lines.forEach(line => line.classList.toggle('active'));
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!hamburger.contains(event.target) && !navLinks.contains(event.target) && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                    
+                    const lines = document.querySelectorAll('.hamburger .line');
+                    lines.forEach(line => line.classList.remove('active'));
+                }
+            });
+            
+            // Cart modal functionality
+            const cartBtn = document.getElementById('cart-btn');
+            const cartModal = document.getElementById('cart-modal');
+            const closeCart = document.getElementById('close-cart');
+            
+            cartBtn.addEventListener('click', function() {
+                cartModal.style.display = 'block';
+                document.body.classList.add('no-scroll');
+            });
+            
+            closeCart.addEventListener('click', function() {
+                cartModal.style.display = 'none';
+                document.body.classList.remove('no-scroll');
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === cartModal) {
+                    cartModal.style.display = 'none';
+                    document.body.classList.remove('no-scroll');
+                }
+            });
+            
+            // Cart item remove functionality
+            const removeButtons = document.querySelectorAll('.cart-item-remove');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cartItem = this.closest('.cart-item');
+                    const itemTitle = cartItem.querySelector('.cart-item-title').textContent;
+                    
+                    if (confirm(`Remove "${itemTitle}" from your cart?`)) {
+                        cartItem.remove();
+                        alert(`"${itemTitle}" has been removed from your cart`);
+                        
+                        // Update cart total (in a real app, this would be more sophisticated)
+                        if (document.querySelectorAll('.cart-item').length === 0) {
+                            document.querySelector('.cart-total').textContent = 'Your cart is empty';
+                            document.querySelector('.discount-info').style.display = 'none';
+                        }
+                    }
+                });
+            });
+            
+            // Bookmark sorting functionality
+            const sortSelect = document.getElementById('sort-by');
+            const bookmarksGrid = document.querySelector('.bookmarks-grid');
+            const books = Array.from(document.querySelectorAll('.book'));
+            
+            sortSelect.addEventListener('change', function() {
+                const sortValue = this.value;
+                
+                // Sort books based on selected option
+                books.sort((a, b) => {
+                    switch(sortValue) {
+                        case 'title':
+                            return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
+                        case 'author':
+                            return a.querySelector('p').textContent.localeCompare(b.querySelector('p').textContent);
+                        case 'price-low':
+                            const priceA = parseFloat(a.querySelector('.book-meta div:last-child').textContent.replace('$', ''));
+                            const priceB = parseFloat(b.querySelector('.book-meta div:last-child').textContent.replace('$', ''));
+                            return priceA - priceB;
+                        case 'price-high':
+                            const priceAHigh = parseFloat(a.querySelector('.book-meta div:last-child').textContent.replace('$', ''));
+                            const priceBHigh = parseFloat(b.querySelector('.book-meta div:last-child').textContent.replace('$', ''));
+                            return priceBHigh - priceAHigh;
+                        case 'rating':
+                            const ratingA = parseFloat(a.querySelector('.book-rating').textContent.match(/\d+\.\d+/)[0]);
+                            const ratingB = parseFloat(b.querySelector('.book-rating').textContent.match(/\d+\.\d+/)[0]);
+                            return ratingB - ratingA;
+                        default:
+                            return 0;
+                    }
+                });
+                
+                // Remove all books from grid
+                books.forEach(book => book.remove());
+                
+                // Add sorted books back to grid
+                books.forEach(book => bookmarksGrid.appendChild(book));
+            });
+            
+            // Remove bookmark functionality
+            const removeBookmarkButtons = document.querySelectorAll('.remove-bookmark');
+            removeBookmarkButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const book = this.closest('.book');
+                    const bookTitle = book.querySelector('h3').textContent;
+                    
+                    if (confirm(`Remove "${bookTitle}" from your bookmarks?`)) {
+                        book.remove();
+                        
+                        // Update bookmark count
+                        const bookmarkCount = document.querySelector('.bookmark-count span');
+                        const currentCount = parseInt(bookmarkCount.textContent);
+                        bookmarkCount.textContent = currentCount - 1;
+                        
+                        // Show empty state if no bookmarks left
+                        if (document.querySelectorAll('.book').length === 0) {
+                            document.querySelector('.empty-state').style.display = 'block';
+                            document.querySelector('.bookmark-actions').style.display = 'none';
+                        }
+                    }
+                });
+            });
+            
+            // Book action buttons functionality
+            const bookBtns = document.querySelectorAll('.book-btn');
+            bookBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('secondary')) {
+                        // Heart button is already filled (♥) in bookmarks page
+                        // No action needed
+                    } else {
+                        // Primary button (add to cart)
+                        const bookTitle = this.closest('.book').querySelector('h3').textContent;
+                        alert(`"${bookTitle}" added to your cart!`);
+                    }
+                });
+            });
+            
+            // Logout button functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (confirm('Are you sure you want to logout?')) {
+                    alert('You have been logged out successfully!');
+                    // In a real application, this would redirect to the login page
+                }
+            });
+        });
+    </script>
+</body>
+</html>
