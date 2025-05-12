@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookHaven Staff Dashboard</title>
+    <link rel="stylesheet" href="../Css/StaffDashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Animated Background -->
+    <div class="background">
+      <div class="gradient"></div>
+      <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+      </div>
+    </div>
+
+    <header>
+      <div class="logo">
+        <i class="fas fa-book"></i>
+        <h1>BookHaven Library</h1>
+      </div>
+      <nav>
+        <span class="staff-badge">Staff Portal</span>
+        <button id="logoutBtn" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="left-panel">
+        <div class="glass-card process-claim">
+          <div class="card-glow"></div>
+          <h2><i class="fas fa-qrcode"></i> Process Claim</h2>
+          <div class="claim-form">
+            <div class="input-group">
+              <i class="fas fa-ticket-alt input-icon"></i>
+              <input
+                type="text"
+                id="claimCode"
+                placeholder="Enter claim code (e.g., E2CEY)"
+                maxlength="8"
+              />
+            </div>
+            <button id="processClaimBtn" class="glass-btn">
+              <span class="btn-effect"></span>
+              <i class="fas fa-check"></i> Process
+            </button>
+          </div>
+          <div id="claimResult" class="result-message"></div>
+        </div>
+
+        <div class="glass-card ready-pickup-orders" id="readyPickupOrdersCard">
+          <div class="card-glow"></div>
+          <h2><i class="fas fa-box-open"></i> Ready for Pickup</h2>
+          <div id="readyPickupOrdersList" class="ready-orders-list">
+            <!-- Orders will be inserted here -->
+            <div class="loading-spinner" id="readyOrdersLoading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card current-order hidden" id="currentOrderCard">
+          <div class="card-glow"></div>
+          <h2><i class="fas fa-clipboard-list"></i> Current Order</h2>
+          <div class="order-details" id="orderDetails">
+            <!-- Order details will be populated here -->
+          </div>
+          <button id="completeOrderBtn" class="glass-btn complete-btn">
+            <span class="btn-effect"></span>
+            <i class="fas fa-check-circle"></i> Mark as Complete
+          </button>
+        </div>
+      </section>
+
+      <section class="right-panel">
+        <div class="glass-card completed-orders">
+          <div class="card-glow"></div>
+          <h2><i class="fas fa-check-double"></i> Completed Orders</h2>
+          <div class="filter-controls">
+            <div class="input-group search-group">
+              <i class="fas fa-search input-icon"></i>
+              <input
+                type="text"
+                id="orderSearch"
+                placeholder="Search by ID or title..."
+              />
+            </div>
+            <div class="select-wrapper">
+              <select id="orderFilter">
+                <option value="all">All Orders</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+              </select>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="orders-list" id="ordersList">
+            <!-- Orders will be populated here -->
+            <div class="loading-spinner" id="ordersLoading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div class="no-orders hidden" id="noOrders">
+            <i class="fas fa-inbox"></i>
+            <p>No completed orders to display</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast">
+      <div class="toast-content">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMessage"></span>
+      </div>
+    </div>
+
+    <script type="module" src="../Js/StaffDashboard.js"></script>
+  </body>
+</html>
