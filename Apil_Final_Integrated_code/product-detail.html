@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hunger Games - BookHaven</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="product-detail.css">
+</head>
+<body>
+    <section class="product-detail">
+        <div class="container">
+            <div class="product-grid">
+                <!-- Product Images -->
+               <div class="product-images">
+    <div class="main-image">
+        <img src="" alt="Book cover" id="main-product-image" width="300">
+        <div class="image-overlay">
+            <button class="zoom-btn" id="zoom-btn">
+                <i class="fas fa-search-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="thumbnail-images">
+        <div class="thumbnail active" data-img="">
+            <img src="" alt="Book thumbnail" width="70">
+        </div>
+    </div>
+</div>
+
+<!-- Product Info -->
+
+    <div id="cart-message" style="margin-top: 10px; font-weight: bold;"></div>
+
+
+<div class="product-info">
+    <div class="product-category">Dystopian Fiction</div>
+    <h1 class="product-title"></h1>
+
+    <div class="product-meta">
+        <div class="product-author">By <a href="#"></a></div>
+    </div>
+
+    <div class="product-price-container">
+        <div class="product-price"></div>
+    </div>
+
+    <div class="product-availability in-stock"></div>
+
+    <div class="product-short-details">
+        <div class="detail-item">
+            <span class="detail-label">Publisher:</span>
+            <span class="detail-value" id="publisher"></span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">ISBN:</span>
+            <span class="detail-value" id="isbn"></span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Publication Date:</span>
+            <span class="detail-value" id="pub-date"></span>
+        </div>
+    </div>
+
+
+
+<div class="quantity-selector mb-3 d-flex align-items-center">
+    <label for="quantity" class="me-2 mb-0">Quantity:</label>
+    <button class="btn btn-outline-secondary btn-sm" id="decrease-qty">-</button>
+    <input type="number" id="quantity" value="1" min="1" class="form-control text-center mx-2" style="width: 60px;">
+    <button class="btn btn-outline-secondary btn-sm" id="increase-qty">+</button>
+</div>
+
+    <!-- Product Info -->
+<div class="product-info">
+    <div class="product-availability in-stock"></div>
+
+    <!-- ✅ Add to Cart Button Here -->
+    <div class="product-actions mb-4">
+        <button class="btn btn-primary btn-lg" id="add-to-cart-btn">
+            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+        </button>
+    </div>
+    
+    <div class="product-short-details">
+      
+    </div>
+</div>
+
+
+    <!-- New Book Description Field -->
+    <div class="product-description">
+        <h3>Description:</h3>
+        <p id="book-description"></p>
+    </div>
+
+    <!-- Keep rest of your code here like quantity, cart buttons, delivery etc. -->
+</div>
+
+            </div>
+        </div>
+
+        
+    </section>
+
+    
+
+    <!-- Image Zoom Modal -->
+    <div class="zoom-modal" id="zoom-modal">
+        <span class="zoom-close" id="zoom-close">&times;</span>
+        <img class="zoom-content" id="zoom-img">
+    </div>
+
+   <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About BookHaven</h3>
+                    <p>BookHaven is a private book library store dedicated to providing quality books and exceptional service to our members. We've expanded our reach to offer online browsing and ordering with in-store pickup.</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="UserDashboard.html">Home</a></li>
+                        <li><a href="books.html">Books</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="new-releases.html">New Releases</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><span>Address:</span> 123 Book Street, Kathmandu</p>
+                    <p><span>Phone:</span> 9863267136732</p>
+                    <p><span>Email:</span> info@bookhaven.com</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BookHaven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="product-detail.js"></script>
+</body>
+</html>
