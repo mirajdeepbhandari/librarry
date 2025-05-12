@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Haven Library - Announcements</title>
+    <link rel="stylesheet" href="../Css/Announcement.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <main class="container">
+      <section class="announcement-header">
+        <h2>Announcements</h2>
+        <button id="add-announcement-btn" class="btn primary-btn">
+          <i class="fas fa-plus"></i> New Announcement
+        </button>
+      </section>
+
+      <section id="announcements-list">
+        <!-- Announcements will be loaded here -->
+        <div class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i> Loading announcements...
+        </div>
+      </section>
+
+      <!-- Add/Edit Announcement Modal -->
+      <div id="announcement-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="modal-title">New Announcement</h3>
+            <span class="close">&times;</span>
+          </div>
+          <div class="modal-body">
+            <form id="announcement-form">
+              <input type="hidden" id="announcement-id" />
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required />
+              </div>
+              <div class="form-group">
+                <label for="content">Content</label>
+                <textarea
+                  id="content"
+                  name="content"
+                  rows="5"
+                  required
+                ></textarea>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-date">Start Date</label>
+                  <input
+                    type="date"
+                    id="start-date"
+                    name="startDate"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="end-date">End Date</label>
+                  <input type="date" id="end-date" name="endDate" required />
+                </div>
+              </div>
+              <div class="form-group checkbox-group">
+                <input type="checkbox" id="is-active" name="isActive" checked />
+                <label for="is-active">Active</label>
+              </div>
+              <div class="form-actions">
+                <button type="button" id="cancel-btn" class="btn secondary-btn">
+                  Cancel
+                </button>
+                <button type="submit" class="btn primary-btn">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div id="delete-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Confirm Delete</h3>
+            <span class="close">&times;</span>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this announcement?</p>
+            <div class="form-actions">
+              <button
+                type="button"
+                id="cancel-delete-btn"
+                class="btn secondary-btn"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                id="confirm-delete-btn"
+                class="btn danger-btn"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="../Js/Announcement.js"></script>
+  </body>
+</html>
