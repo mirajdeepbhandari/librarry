@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookmarks - BookHaven</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e67e22;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #777;
+            --border-color: #ddd;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 10px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .hamburger .line {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* User Actions */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Logout Button Styles */
+        .logout-btn {
+            background: linear-gradient(135deg, var(--secondary-color), #d35400);
+            color: white !important;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #d35400, var(--secondary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Page Header */
+        .page-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .page-header h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Bookmarks Section */
+        .bookmarks-section {
+            padding: 60px 0;
+        }
+
+        .bookmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        /* Book Card Styling */
+        .book {
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        .book:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-cover {
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .book:hover .book-cover::after {
+            opacity: 1;
+        }
+
+        .book-info {
+            padding: 20px;
+            position: relative;
+        }
+
+        .book h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .book:hover h3 {
+            color: var(--secondary-color);
+        }
+
+        .book p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .book-rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .book-rating span {
+            color: #f39c12;
+            margin-right: 5px;
+        }
+
+        .book-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .book-status.available {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .book-status.borrowed {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .book-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .book-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .book-btn.primary {
+            background-color: var(--secondary-color);
+            color: white;
+            flex: 1;
+        }
+
+        .book-btn.primary:hover {
+            background-color: #d35400;
+        }
+
+        .book-btn.secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            margin-left: 10px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-btn.secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Book Category Tag */
+        .book-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        /* Sale Badge */
+        .sale-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--danger-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            transform: rotate(5deg);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empty-state-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .empty-state-btn:hover {
+            background-color: #d35400;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Bookmark Actions */
+        .bookmark-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .bookmark-count {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .bookmark-count span {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .bookmark-sort {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bookmark-sort label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .bookmark-sort select {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .bookmark-sort select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        /* Remove Bookmark Button */
+        .remove-bookmark {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--danger-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .book:hover .remove-bookmark {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .remove-bookmark:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .footer-section p {
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+
+        .footer-section.links ul {
+            list-style: none;
+        }
+
+        .footer-section.links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section.links a {
+            color: #bdc3c7;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section.links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer-section.contact span {
+            font-weight: 600;
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .social-icon:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Hamburger Menu Animation */
+        .hamburger .line.active:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger .line.active:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger .line.active:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .bookmarks-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .user-actions {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bookmarks-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hamburger {
+                display: block;
+                z-index: 1001;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.5s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .bookmark-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .user-actions {
+                position: absolute;
+                top: 15px;
+                right: 70px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .bookmarks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-actions .icon-text {
+                display: none;
+            }
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn.primary:hover {
+            background-color: #d35400;
+        }
+
+        .modal-btn.secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn.secondary:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Cart Modal Specific Styles */
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-remove {
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-item-remove:hover {
+            transform: scale(1.2);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .discount-info {
+            font-size: 0.9rem;
+            color: var(--success-color);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="page-header">
+        <div class="container">
+            <h2>My Bookmarks</h2>
+            <p>Your collection of favorite books saved for later.</p>
+        </div>
+    </section>
+
+    <section class="bookmarks-section">
+        <div class="container">
+            
+
+            <div class="bookmarks-grid" id="bookmarksGrid">
+                           
+               
+
+            </div>
+
+            <!-- Empty state (hidden by default, shown when no bookmarks) -->
+            <div class="empty-state" style="display: none;">
+                <div class="empty-state-icon">
+                    <i class="far fa-heart"></i>
+                </div>
+                <h3>No Bookmarks Yet</h3>
+                <p>You haven't bookmarked any books yet. Browse our collection and click the heart icon to save books for later.</p>
+                <a href="UserDashboard.html" class="empty-state-btn">Browse Books</a>
+            </div>
+        </div>
+    </section>
+ <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About BookHaven</h3>
+                    <p>BookHaven is a private book library store dedicated to providing quality books and exceptional service to our members. We've expanded our reach to offer online browsing and ordering with in-store pickup.</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="UserDashboard.html">Home</a></li>
+                        <li><a href="books.html">Books</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="new-releases.html">New Releases</a></li>
+                        <li><a href="membership.html">Membership</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>Contact Us</h3>
+                    <p><span>Address:</span> 123 Book Street, Kathmandu</p>
+                    <p><span>Phone:</span> 9863267136732</p>
+                    <p><span>Email:</span> info@bookhaven.com</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BookHaven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+   
+    
+
+   
+</body>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const token = sessionStorage.getItem("authToken");
+
+    if (!token) {
+        console.error("No token found in sessionStorage. User might not be logged in.");
+        return;
+    }
+
+    const bookmarksGrid = document.getElementById("bookmarksGrid");
+    if (!bookmarksGrid) {
+        console.error("Element with id 'bookmarksGrid' not found in the DOM.");
+        return;
+    }
+
+    fetch("http://localhost:5085/api/Bookmark", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        if (result.success && result.data && Array.isArray(result.data)) {
+            // Filter unique books by book.id
+            const seenBookIds = new Set();
+            const uniqueBookmarks = result.data.filter(bookmark => {
+                const id = bookmark.book?.id;
+                if (!id || seenBookIds.has(id)) return false;
+                seenBookIds.add(id);
+                return true;
+            });
+
+            bookmarksGrid.innerHTML = ""; // Clear any existing content
+
+            uniqueBookmarks.forEach(bookmark => {
+    const book = bookmark.book;
+    const isAvailable = book.inventory?.isAvailable;
+
+    const bookHTML = `
+    <div class="book" data-bookmark-id="${bookmark.id}">
+        <div class="remove-bookmark" title="Remove from bookmarks">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="book-category">${book.format}</div>
+        <div class="book-cover" style="background-image: url('${book.coverImageUrl}')"></div>
+        <div class="book-info">
+            <h3>${book.title}</h3>
+            <p>${book.authorName}</p>
+            <div class="book-meta">
+                <div>$${book.price}</div>
+            </div>
+            <div class="book-status ${isAvailable ? 'available' : 'unavailable'}">
+                ${isAvailable ? 'In Stock' : 'Out of Stock'}
+            </div>
+            <div class="book-actions">
+                <div class="book-btn primary">Add to Cart</div>
+            </div>
+        </div>
+    </div>`;
+
+    bookmarksGrid.insertAdjacentHTML('beforeend', bookHTML);
+});
+
+// Add event listener AFTER DOM is updated
+document.querySelectorAll('.remove-bookmark').forEach(removeIcon => {
+    removeIcon.addEventListener('click', function () {
+        const bookElement = this.closest('.book');
+        const bookmarkId = bookElement.getAttribute('data-bookmark-id');
+
+        fetch(`http://localhost:5085/api/Bookmark/${bookmarkId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete bookmark');
+            }
+            bookElement.remove(); // Remove book from the DOM
+        })
+        .catch(error => {
+            console.error('Error deleting bookmark:', error);
+        });
+    });
+});
+
+        } else {
+            console.error("Invalid response structure or no data found:", result);
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching bookmarks:", error);
+    });
+});
+</script>
+
+
+</html>

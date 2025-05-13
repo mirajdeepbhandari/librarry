@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookHaven - Private Book Library</title>
+    <!-- Add Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Existing styles... */
+
+      /* Quantity Control Styles */
+      .quantity-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+        width: 120px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .quantity-control button {
+        background: none;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .quantity-control button:hover {
+        background-color: #f0f0f0;
+      }
+
+      .quantity-control input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        padding: 8px;
+        font-size: 14px;
+      }
+      #notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4caf50;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .book-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .book-btn.primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .book-btn.primary:hover {
+        background-color: #0056b3;
+      }
+
+      .book-btn.primary:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .search-container {
+        margin: 20px auto;
+        max-width: 800px;
+        position: relative;
+      }
+
+      .search-bar {
+        display: flex;
+        width: 100%;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 12px 20px;
+        border: 1px solid #ddd;
+        border-right: none;
+        border-radius: 30px 0 0 30px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      .search-input:focus {
+        border-color: #007bff;
+      }
+
+      .search-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 0 25px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+
+      .search-button:hover {
+        background-color: #0056b3;
+      }
+
+      .search-results {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      /* Sorting section styles */
+      .sorting-section {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        padding: 0 15px;
+      }
+
+      .sort-select {
+        margin-left: 10px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background-color: white;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .sort-select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
+
+      /* Bestseller badge */
+      .bestseller-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #ff6b6b;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1;
+      }
+
+      /* Book card enhancements */
+      .book {
+        position: relative;
+      }
+
+      @media (max-width: 768px) {
+        .search-container {
+          padding: 0 15px;
+        }
+
+        .sorting-section {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .sort-select {
+          margin-left: 0;
+          margin-top: 8px;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <h1>BookHaven</h1>
+        </div>
+        <nav>
+          <div class="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+          <ul class="nav-links">
+            <li><a href="UserDashboard.html">Home</a></li>
+            <li><a href="categories.html" class="active">Categories</a></li>
+            <li><a href="./Review.html" class="active">Review</a></li>
+          </ul>
+        </nav>
+        <div class="user-actions">
+          <a href="notification.html" class="icon-btn" id="notification-btn">
+            <i class="fas fa-bell"></i>
+          </a>
+
+          <a href="bookmark.html" class="icon-btn" id="wishlist-btn">
+            <i class="fas fa-heart"></i>
+          </a>
+
+          <a href="Html\Cart.html" class="icon-btn" id="cart-btn">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+
+          <a href="index.html" class="logout-btn" id="logout-btn">
+            <span class="logout-icon"></span>
+            <span class="icon-text">Logout</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="search-container">
+      <div class="search-bar">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Search by title, author, or ISBN..."
+        />
+        <button id="search-button" class="search-button">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+
+    <!-- New Filter Section -->
+    <section class="filter-section1">
+      <div class="container1">
+        <!-- Sorting Section -->
+        <div class="sorting-section">
+          <label for="sort-books">Sort by:</label>
+          <select id="sort-books" class="sort-select">
+            <option value="default">Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="title-asc">Title: A to Z</option>
+            <option value="title-desc">Title: Z to A</option>
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+          </select>
+        </div>
+
+        <div class="filter-container1" id="filter-container1">
+          <div class="filter-row1">
+            <div class="filter-group1">
+              <h3>Genre</h3>
+              <div class="filter-options1">
+                <!-- Categories will be populated here -->
+              </div>
+            </div>
+          </div>
+          <div class="filter-row1">
+            <div class="filter-group1">
+              <h3>Price Range</h3>
+              <div class="price-range1">
+                <div class="price-inputs1">
+                  <div class="price-input1">
+                    <label for="min-price1">Min:</label>
+                    <input
+                      type="number"
+                      id="min-price1"
+                      name="min-price"
+                      value="0"
+                      min="0"
+                    />
+                  </div>
+                  <div class="price-input1">
+                    <label for="max-price1">Max:</label>
+                    <input
+                      type="number"
+                      id="max-price1"
+                      name="max-price"
+                      value="1000"
+                      min="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="filter-group1">
+              <h3>Availability</h3>
+              <div class="filter-options1">
+                <label class="filter-option1"
+                  ><input
+                    type="checkbox"
+                    name="availability"
+                    value="in-stock"
+                    id="in-stock"
+                  />
+                  In Stock</label
+                >
+                <label class="filter-option1"
+                  ><input
+                    type="checkbox"
+                    name="availability"
+                    value="out-of-stock"
+                    id="out-of-stock"
+                  />
+                  Out of Stock</label
+                >
+              </div>
+            </div>
+            <div class="filter-group1">
+              <h3>Languages and format</h3>
+              <div class="filter-subgroup1">
+                <h4>Languages</h4>
+                <div class="filter-options1">
+                  <label class="filter-option1"
+                    ><input
+                      type="checkbox"
+                      name="language"
+                      value="English"
+                      id="english-language"
+                    />
+                    English</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="filter-actions1">
+            <button class="filter-btn1 reset1" id="reset-filters">Reset</button>
+            <button class="filter-btn1 apply1" id="apply-filters">
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="container">
+        <div class="stat-item">
+          <h3>100+</h3>
+          <p>Books</p>
+        </div>
+        <div class="stat-item">
+          <h3>50+</h3>
+          <p>Members</p>
+        </div>
+        <div class="stat-item">
+          <h3>5+</h3>
+          <p>Daily Orders</p>
+        </div>
+        <div class="stat-item">
+          <h3>98%</h3>
+          <p>Happy Customers</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured-books">
+      <div class="container">
+        <h2 class="section-title">Featured Books</h2>
+
+        <div class="book-slider">
+          <div class="slider-header">
+            <h3 class="slider-title">Bestsellers</h3>
+          </div>
+
+          <div class="books-wrapper">
+            <div class="books-container">
+              <div class="book"></div>
+            </div>
+          </div>
+
+          <div class="slider-pagination" id="slider-pagination"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="notification"></div>
+
+    <section class="cta">
+      <div class="container">
+        <h2>Join Our Membership Program</h2>
+        <p>
+          Become a member today to enjoy exclusive benefits, discounts, and
+          early access to new releases and special editions.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h3>About BookHaven</h3>
+            <p>
+              BookHaven is a private book library store dedicated to providing
+              quality books and exceptional service to our members. We've
+              expanded our reach to offer online browsing and ordering with
+              in-store pickup.
+            </p>
+          </div>
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="UserDashboard.html">Home</a></li>
+              <li><a href="books.html">Books</a></li>
+              <li><a href="categories.html">Categories</a></li>
+              <li><a href="new-releases.html">New Releases</a></li>
+              <li><a href="membership.html">Membership</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+            </ul>
+          </div>
+          <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p><span>Address:</span> 123 Book Street, Kathmandu</p>
+            <p><span>Phone:</span> 9863267136732</p>
+            <p><span>Email:</span> info@bookhaven.com</p>
+            <div class="social-icons">
+              <a href="#" class="social-icon"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-icon"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="social-icon"
+                ><i class="fab fa-pinterest"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 BookHaven. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cart-modal">
+      <div class="modal-content">
+        <span class="modal-close" id="close-cart">&times;</span>
+        <div class="modal-header">
+          <h3>Your Cart</h3>
+        </div>
+        <div class="modal-body">
+          <div class="cart-items">
+            <div class="cart-item">
+              <img
+                src="https://source.unsplash.com/random/60x80/?book,gatsby"
+                alt="Book cover"
+                class="cart-item-img"
+              />
+              <div class="cart-item-info">
+                <div class="cart-item-title">The Great Gatsby</div>
+                <div class="cart-item-price">$19.99</div>
+              </div>
+              <div class="cart-item-remove">&times;</div>
+            </div>
+            <div class="cart-item">
+              <img
+                src="https://source.unsplash.com/random/60x80/?book,hobbit"
+                alt="Book cover"
+                class="cart-item-img"
+              />
+              <div class="cart-item-info">
+                <div class="cart-item-title">The Hobbit</div>
+                <div class="cart-item-price">$19.54</div>
+              </div>
+              <div class="cart-item-remove">&times;</div>
+            </div>
+          </div>
+          <div class="cart-total">
+            <span>Total:</span>
+            <span>$39.53</span>
+          </div>
+          <div class="discount-info">
+            You're eligible for a 5% discount on this order!
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn secondary">Continue Shopping</button>
+          <button class="modal-btn primary">Checkout</button>
+        </div>
+      </div>
+    </div>
+    <div class="slider-pagination" id="slider-pagination"></div>
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="UserDashboard.js"></script>
+
+    <!-- <script>
+        // Enhanced fetchBooks function with improved quantity control
+        function fetchBooks() {
+            const token = sessionStorage.getItem("authToken");
+            const booksContainer = document.querySelector(".books-container");
+            booksContainer.innerHTML = "<div class='loading'>Loading bestsellers...</div>";
+
+            fetch("http://localhost:5085/api/Book/GetAllBooks", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
+            .then((data) => {
+                const booksArray = Array.isArray(data.data) ? data.data : [];
+                const bestsellers = booksArray
+                    .filter((book) => book.isBestseller === true)
+                    .slice(0, 4); // Only take first 4 bestsellers
+
+                if (bestsellers.length === 0) {
+                    booksContainer.innerHTML = "<div class='no-books'>No bestsellers available.</div>";
+                    return;
+                }
+
+                booksContainer.innerHTML = ""; // Clear loading
+
+                bestsellers.forEach((book) => {
+                    const {
+                        id,
+                        title,
+                        authorName,
+                        price,
+                        format,
+                        coverImageUrl,
+                        inventory
+                    } = book;
+
+                    const quantityInStock = inventory?.quantityInStock ?? 0;
+                    const isAvailable = inventory?.isAvailable ?? false;
+
+                    const bookDiv = document.createElement("div");
+                    bookDiv.className = "book";
+                    bookDiv.innerHTML = `
+                        <div class="book-category">${format || "Unknown Format"}</div>
+                        <div class="book-cover" style="background-image: url('${coverImageUrl || "https://source.unsplash.com/random/200x300/?book"}')"></div>
+                        <div class="book-info">
+                            <h3>${title}</h3>
+                            <p>${authorName}</p>
+                            <div class="book-meta">
+                                <div>$${price.toFixed(2)}</div>
+                            </div>
+                            <div class="book-status ${isAvailable ? "available" : "unavailable"}">
+                                ${isAvailable ? `In Stock (${quantityInStock})` : "Out of Stock"}
+                            </div>
+                            <div class="book-actions">
+                                ${isAvailable ? `
+                                    <div class="quantity-control">
+                                        <button type="button" class="decrease-qty">-</button>
+                                        <input type="text" class="qty-input" value="1" min="1" max="${quantityInStock}" readonly>
+                                        <button type="button" class="increase-qty">+</button>
+                                    </div>
+                                    <div class="book-btn primary">Add to Cart</div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    // Quantity control logic
+                    if (isAvailable) {
+                        const decreaseBtn = bookDiv.querySelector('.decrease-qty');
+                        const increaseBtn = bookDiv.querySelector('.increase-qty');
+                        const qtyInput = bookDiv.querySelector('.qty-input');
+                        const addToCartBtn = bookDiv.querySelector('.book-btn.primary');
+
+                        // Prevent navigation when interacting with quantity controls
+                        decreaseBtn.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Stop event from bubbling to parent
+                            let currentQty = parseInt(qtyInput.value);
+                            if (currentQty > 1) {
+                                qtyInput.value = currentQty - 1;
+                            }
+                        });
+
+                        increaseBtn.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Stop event from bubbling to parent
+                            let currentQty = parseInt(qtyInput.value);
+                            if (currentQty < quantityInStock) {
+                                qtyInput.value = currentQty + 1;
+                            }
+                        });
+
+                        // Prevent navigation on quantity control interactions
+                        qtyInput.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                        });
+
+                        // Add to Cart functionality
+                        addToCartBtn.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Prevent navigation to product detail
+                            const quantity = parseInt(qtyInput.value);
+                            
+                            // Implement cart addition logic
+                            addToCart({
+                                id: id,
+                                title: title,
+                                price: price,
+                                quantity: quantity
+                            });
+                        });
+                    }
+
+                    // Only add product detail navigation if not interacting with controls
+                    bookDiv.addEventListener("click", (event) => {
+                        // Check if click was not on interactive elements
+                        if (!event.target.closest('.quantity-control, .book-btn')) {
+                            window.location.href = `product-detail.html?id=${id}`;
+                        }
+                    });
+
+                    booksContainer.appendChild(bookDiv);
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching bestsellers:", error);
+                booksContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load bestsellers. Please try again later.</p>
+                        <button class="retry-btn">Retry</button>
+                    </div>
+                `;
+                document.querySelector(".retry-btn").addEventListener("click", fetchBooks);
+            });
+        }
+
+        // Basic cart management function (to be expanded)
+        function addToCart(bookDetails) {
+            // Retrieve existing cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+            
+            // Check if book already in cart
+            const existingBookIndex = cart.findIndex(item => item.id === bookDetails.id);
+            
+            if (existingBookIndex > -1) {
+                // Update quantity if book exists
+                cart[existingBookIndex].quantity += bookDetails.quantity;
+            } else {
+                // Add new book to cart
+                cart.push(bookDetails);
+            }
+            
+            // Save updated cart to localStorage
+            localStorage.setItem('bookCart', JSON.stringify(cart));
+            
+            // Optional: Update cart UI or show notification
+            alert(`Added ${bookDetails.quantity} ${bookDetails.title} to cart`);
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchBooks);
+    </script> -->
+
+    <script>
+      let booksContainer;
+      let allBooksData = [];
+      let selectedCategoryId = 'all';
+      let currentSortOption = 'default';
+      let searchQuery = '';
+      let activeFilters = {
+        minPrice: 0,
+        maxPrice: 1000,
+        inStock: false,
+        outOfStock: false,
+        language: {
+          english: false
+        }
+      };
+
+      // Function to populate category filters
+      function populateCategoryFilters() {
+        const filterOptionsContainer = document.querySelector(
+          '.filter-group1:first-child .filter-options1'
+        );
+
+        // Clear existing options
+        filterOptionsContainer.innerHTML =
+          "<div class='loading'>Loading categories...</div>";
+
+        fetch('http://localhost:5085/api/Category')
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Network response failed with status: ${response.status}`
+              );
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log('Categories data:', data);
+
+            // Clear loading message
+            filterOptionsContainer.innerHTML = '';
+
+            // Get categories array (handle both direct array or nested data property)
+            const categories = data.data || data;
+
+            if (Array.isArray(categories) && categories.length > 0) {
+              // Add an "All Books" option
+              const allBooksLabel = document.createElement('label');
+              allBooksLabel.className = 'filter-option1';
+              allBooksLabel.innerHTML = `
+                        <input type="radio" name="category" value="all" checked> Default
+                    `;
+              allBooksLabel
+                .querySelector('input')
+                .addEventListener('change', () => {
+                  if (allBooksLabel.querySelector('input').checked) {
+                    selectedCategoryId = 'all';
+                    fetchAllBooks();
+                  }
+                });
+              filterOptionsContainer.appendChild(allBooksLabel);
+
+              // Create a radio button for each category
+              categories.forEach((category) => {
+                // Extract the category name and ID
+                const categoryName =
+                  category.name ||
+                  category.categoryName ||
+                  category.title ||
+                  'Unknown Category';
+                const categoryId = category.id || category.categoryId || '';
+
+                // Create the radio button label element
+                const label = document.createElement('label');
+                label.className = 'filter-option1';
+
+                // Set the inner HTML with radio button and category name (using radio instead of checkbox)
+                label.innerHTML = `
+                            <input type="radio" name="category" value="${categoryId}"> ${categoryName}
+                        `;
+
+                // Add change event listener to fetch books by category
+                label
+                  .querySelector('input')
+                  .addEventListener('change', (event) => {
+                    if (event.target.checked) {
+                      selectedCategoryId = categoryId;
+                      fetchBooksByCategory(categoryId);
+                    }
+                  });
+
+                // Add to the container
+                filterOptionsContainer.appendChild(label);
+              });
+            } else {
+              filterOptionsContainer.innerHTML =
+                "<div class='no-categories'>No categories available</div>";
+            }
+          })
+          .catch((error) => {
+            console.error('Error fetching categories:', error);
+            filterOptionsContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load categories. Please try again.</p>
+                        <button class="retry-btn">Retry</button>
+                    </div>
+                `;
+            document
+              .querySelector('.retry-btn')
+              .addEventListener('click', populateCategoryFilters);
+          });
+      }
+
+      // Function to fetch all books
+      function fetchAllBooks() {
+        if (!booksContainer) {
+          booksContainer = document.querySelector('.books-container');
+          if (!booksContainer) {
+            console.error('Books container not found');
+            return;
+          }
+        }
+
+        booksContainer.innerHTML =
+          "<div class='loading'>Loading all books...</div>";
+
+        fetch('http://localhost:5085/api/Book/GetAllBooks')
+          .then((response) => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+          })
+          .then((responseData) => {
+            console.log('All books data:', responseData);
+
+            // Extract books from the data property
+            let booksArray = [];
+
+            if (
+              responseData &&
+              responseData.data &&
+              Array.isArray(responseData.data)
+            ) {
+              // Format: {data: [...]}
+              booksArray = responseData.data;
+              console.log(
+                `Found ${booksArray.length} books in the data property`
+              );
+            } else if (Array.isArray(responseData)) {
+              // Format: [...]
+              booksArray = responseData;
+            }
+
+            // Store all books for filtering
+            allBooksData = booksArray;
+
+            // Set max price based on the highest book price
+            if (booksArray.length > 0) {
+              const maxPrice = Math.max(
+                ...booksArray.map((book) => book.price || 0)
+              );
+              document.getElementById('max-price1').value = Math.ceil(maxPrice);
+              activeFilters.maxPrice = Math.ceil(maxPrice);
+            }
+
+            // Apply filters, sorting, and search
+            applyFiltersAndSort();
+
+            // Update the slider title to show the count
+            document.querySelector(
+              '.slider-title'
+            ).textContent = `All Books (${booksArray.length})`;
+          })
+          .catch((error) => {
+            console.error('Error fetching all books:', error);
+            booksContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load books. Please try again later.</p>
+                        <button class="retry-btn">Retry</button>
+                    </div>
+                `;
+            document
+              .querySelector('.retry-btn')
+              .addEventListener('click', fetchAllBooks);
+          });
+      }
+
+      // Function to fetch books by category ID
+      function fetchBooksByCategory(categoryId) {
+        if (!booksContainer) {
+          booksContainer = document.querySelector('.books-container');
+          if (!booksContainer) {
+            console.error('Books container not found');
+            return;
+          }
+        }
+
+        booksContainer.innerHTML = `<div class='loading'>Loading books for category ${categoryId}...</div>`;
+
+        fetch(`http://localhost:5085/api/Category/${categoryId}/books`)
+          .then((response) => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+          })
+          .then((data) => {
+            console.log(`Books for category ${categoryId}:`, data);
+
+            // Handle different response formats
+            let books = [];
+
+            if (data.success && data.data && data.data.books) {
+              // Format: {success: true, data: {category: {...}, books: [...]}}
+              books = data.data.books;
+            } else if (data.data && Array.isArray(data.data)) {
+              // Format: {data: [...]}
+              books = data.data;
+            } else if (Array.isArray(data)) {
+              // Format: [...]
+              books = data;
+            }
+
+            allBooksData = books; // Store category books for filtering
+
+            // Update the slider title to show the category name and count
+            const categoryName = document
+              .querySelector(`input[name="category"][value="${categoryId}"]`)
+              .closest('label')
+              .textContent.trim();
+            document.querySelector(
+              '.slider-title'
+            ).textContent = `${categoryName} (${books.length})`;
+
+            // Apply filters, sorting, and search
+            applyFiltersAndSort();
+          })
+          .catch((error) => {
+            console.error(
+              `Error fetching books for category ${categoryId}:`,
+              error
+            );
+            booksContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load books for this category. Please try again later.</p>
+                        <button class="retry-btn">Retry</button>
+                    </div>
+                `;
+            document
+              .querySelector('.retry-btn')
+              .addEventListener('click', () =>
+                fetchBooksByCategory(categoryId)
+              );
+          });
+      }
+
+      // Function to search books
+      function searchBooks(query) {
+        searchQuery = query.trim().toLowerCase();
+
+        // If search query is empty, just apply filters and sorting
+        if (!searchQuery) {
+          applyFiltersAndSort();
+          document.getElementById('search-results').textContent = '';
+          return;
+        }
+
+        // Apply search, filters, and sorting
+        applyFiltersAndSort();
+      }
+
+      // Function to apply all active filters, sorting, and search to the current book data
+      function applyFiltersAndSort() {
+        if (!allBooksData || allBooksData.length === 0) {
+          booksContainer.innerHTML =
+            "<div class='no-books'>No books available.</div>";
+          return; // No data to filter
+        }
+
+        // Get filter values
+        const minPrice =
+          parseFloat(document.getElementById('min-price1').value) || 0;
+        const maxPrice =
+          parseFloat(document.getElementById('max-price1').value) || 1000;
+        const inStockChecked = document.getElementById('in-stock').checked;
+        const outOfStockChecked =
+          document.getElementById('out-of-stock').checked;
+        const englishLanguageChecked =
+          document.getElementById('english-language').checked;
+
+        // Update active filters
+        activeFilters = {
+          minPrice,
+          maxPrice,
+          inStock: inStockChecked,
+          outOfStock: outOfStockChecked,
+          language: {
+            english: englishLanguageChecked
+          }
+        };
+
+        // Apply search first
+        let searchedBooks = allBooksData;
+        if (searchQuery) {
+          searchedBooks = allBooksData.filter((book) => {
+            const title = (book.title || '').toLowerCase();
+            const author = (book.authorName || '').toLowerCase();
+            const isbn = (book.isbn || '').toLowerCase();
+            const description = (book.description || '').toLowerCase();
+
+            return (
+              title.includes(searchQuery) ||
+              author.includes(searchQuery) ||
+              isbn.includes(searchQuery) ||
+              description.includes(searchQuery)
+            );
+          });
+
+          // Update search results count
+          document.getElementById('search-results').textContent = `Found ${
+            searchedBooks.length
+          } book${
+            searchedBooks.length !== 1 ? 's' : ''
+          } matching "${searchQuery}"`;
+        }
+
+        // Apply filters to the searched data
+        let filteredBooks = searchedBooks.filter((book) => {
+          const price = typeof book.price === 'number' ? book.price : 0;
+          const isInStock = book.inventory?.isAvailable === true;
+          const language = (book.language || '').toLowerCase();
+
+          // Price filter
+          if (price < minPrice || price > maxPrice) {
+            return false;
+          }
+
+          // Stock status filter
+          if (inStockChecked && !outOfStockChecked && !isInStock) {
+            return false;
+          }
+          if (!inStockChecked && outOfStockChecked && isInStock) {
+            return false;
+          }
+
+          // Language filter
+          if (englishLanguageChecked && language !== 'english') {
+            return false;
+          }
+
+          return true;
+        });
+
+        // Apply sorting
+        const sortedBooks = sortBooks(filteredBooks, currentSortOption);
+
+        // Display the filtered, sorted, and searched books
+        displayBooks(sortedBooks);
+
+        // Update the count in the title if filters are applied
+        const titleElement = document.querySelector('.slider-title');
+        const baseTitle = titleElement.textContent.split('(')[0].trim();
+        titleElement.textContent = `${baseTitle} (${filteredBooks.length})`;
+      }
+
+      // Function to sort books based on the selected sort option
+      function sortBooks(books, sortOption) {
+        if (sortOption === 'default') {
+          return books; // No sorting, return as is
+        }
+
+        const sortedBooks = [...books]; // Create a copy to avoid modifying the original array
+
+        switch (sortOption) {
+          case 'price-asc':
+            sortedBooks.sort((a, b) => (a.price || 0) - (b.price || 0));
+            break;
+          case 'price-desc':
+            sortedBooks.sort((a, b) => (b.price || 0) - (a.price || 0));
+            break;
+          case 'title-asc':
+            sortedBooks.sort((a, b) =>
+              (a.title || '').localeCompare(b.title || '')
+            );
+            break;
+          case 'title-desc':
+            sortedBooks.sort((a, b) =>
+              (b.title || '').localeCompare(a.title || '')
+            );
+            break;
+          case 'date-desc': // Newest first
+            sortedBooks.sort((a, b) => {
+              const dateA = a.publicationDate
+                ? new Date(a.publicationDate)
+                : new Date(0);
+              const dateB = b.publicationDate
+                ? new Date(b.publicationDate)
+                : new Date(0);
+              return dateB - dateA;
+            });
+            break;
+          case 'date-asc': // Oldest first
+            sortedBooks.sort((a, b) => {
+              const dateA = a.publicationDate
+                ? new Date(a.publicationDate)
+                : new Date(0);
+              const dateB = b.publicationDate
+                ? new Date(b.publicationDate)
+                : new Date(0);
+              return dateA - dateB;
+            });
+            break;
+          default:
+            // No sorting
+            break;
+        }
+
+        return sortedBooks;
+      }
+
+      // Function to reset all filters and search
+      function resetFilters() {
+        // Reset UI elements
+        document.getElementById('min-price1').value = 0;
+        document.getElementById('max-price1').value = 1000;
+        document.getElementById('in-stock').checked = false;
+        document.getElementById('out-of-stock').checked = false;
+        document.getElementById('english-language').checked = false;
+        document.getElementById('sort-books').value = 'default';
+        document.getElementById('search-input').value = '';
+        document.getElementById('search-results').textContent = '';
+
+        // Reset variables
+        currentSortOption = 'default';
+        searchQuery = '';
+
+        // Reset active filters
+        activeFilters = {
+          minPrice: 0,
+          maxPrice: 1000,
+          inStock: false,
+          outOfStock: false,
+          language: {
+            english: false
+          }
+        };
+
+        // If we have data, display all of it
+        if (allBooksData && allBooksData.length > 0) {
+          displayBooks(allBooksData);
+
+          // Update the count in the title
+          const titleElement = document.querySelector('.slider-title');
+          const baseTitle = titleElement.textContent.split('(')[0].trim();
+          titleElement.textContent = `${baseTitle} (${allBooksData.length})`;
+        } else {
+          // Otherwise, fetch the appropriate data based on selected category
+          if (selectedCategoryId === 'all') {
+            fetchAllBooks();
+          } else {
+            fetchBooksByCategory(selectedCategoryId);
+          }
+        }
+      }
+
+      // Function to display books from API response
+      function displayBooks(books) {
+        // Clear loading message
+        if (!booksContainer) {
+          booksContainer = document.querySelector('.books-container');
+        }
+
+        booksContainer.innerHTML = '';
+
+        if (!books || books.length === 0) {
+          booksContainer.innerHTML =
+            "<div class='no-books'>No books match your criteria.</div>";
+          return;
+        }
+
+        console.log(`Displaying ${books.length} books`);
+
+        // Display each book
+        books.forEach((book) => {
+          const {
+            id,
+            title,
+            authorName,
+            price,
+            format,
+            coverImageUrl,
+            inventory,
+            language,
+            isBestseller,
+            publicationDate
+          } = book;
+
+          const quantityInStock = inventory?.quantityInStock ?? 0;
+          const isAvailable = inventory?.isAvailable ?? false;
+
+          const bookDiv = document.createElement('div');
+          bookDiv.className = 'book';
+
+          // Add bestseller badge if applicable
+          const bestsellerBadge = isBestseller
+            ? '<div class="bestseller-badge">Bestseller</div>'
+            : '';
+
+          // Format publication date
+          const formattedDate = publicationDate
+            ? new Date(publicationDate).toLocaleDateString()
+            : 'Unknown date';
+
+          bookDiv.innerHTML = `
+                ${bestsellerBadge}
+                <div class="book-category">${format || 'Unknown Format'}</div>
+                <div class="book-cover" style="background-image: url('${
+                  coverImageUrl ||
+                  'https://source.unsplash.com/random/200x300/?book'
+                }')"></div>
+                <div class="book-info">
+                    <h3>${title}</h3>
+                    <p>${authorName}</p>
+                    <p>${language || 'Unknown Language'}</p>
+                    <p class="publication-date">Published: ${formattedDate}</p>
+                    <div class="book-meta">
+                        <div>$${
+                          typeof price === 'number' ? price.toFixed(2) : '0.00'
+                        }</div>
+                    </div>
+                    <div class="book-status ${
+                      isAvailable ? 'available' : 'unavailable'
+                    }">
+                        ${
+                          isAvailable
+                            ? `In Stock (${quantityInStock})`
+                            : 'Out of Stock'
+                        }
+                    </div>
+                    <div class="book-actions">
+                        <div class="book-btn primary">Add to Cart</div>
+                    </div>
+                </div>
+            `;
+
+          // Navigate to product detail on click
+          bookDiv.addEventListener('click', () => {
+            window.location.href = `product-detail.html?id=${id}`;
+          });
+
+          booksContainer.appendChild(bookDiv);
+        });
+      }
+
+      // Initialize when the DOM is fully loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM fully loaded, initializing...');
+
+        // Store reference to books container
+        booksContainer = document.querySelector('.books-container');
+        console.log('Books container:', booksContainer);
+
+        // Populate category filters
+        populateCategoryFilters();
+
+        // Load all books initially
+        fetchAllBooks();
+
+        // Set up filter toggle button
+        const filterToggleBtn = document.getElementById('filter-toggle1');
+        const filterContainer = document.getElementById('filter-container1');
+
+        if (filterToggleBtn && filterContainer) {
+          filterToggleBtn.addEventListener('click', () => {
+            filterContainer.classList.toggle('active');
+          });
+        }
+
+        // Set up Apply Filters button
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        if (applyFiltersBtn) {
+          applyFiltersBtn.addEventListener('click', applyFiltersAndSort);
+        }
+
+        // Set up Reset Filters button
+        const resetFiltersBtn = document.getElementById('reset-filters');
+        if (resetFiltersBtn) {
+          resetFiltersBtn.addEventListener('click', resetFilters);
+        }
+
+        // Set up sort select
+        const sortSelect = document.getElementById('sort-books');
+        if (sortSelect) {
+          sortSelect.addEventListener('change', (e) => {
+            currentSortOption = e.target.value;
+            applyFiltersAndSort();
+          });
+        }
+
+        // Set up search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+
+        if (searchInput && searchButton) {
+          // Search on button click
+          searchButton.addEventListener('click', () => {
+            searchBooks(searchInput.value);
+          });
+
+          // Search on Enter key press
+          searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              searchBooks(searchInput.value);
+            }
+          });
+
+          // Real-time search (optional, can be commented out if performance is an issue)
+          searchInput.addEventListener('input', (e) => {
+            // Only search if there are at least 3 characters or the field is empty
+            if (e.target.value.length >= 3 || e.target.value.length === 0) {
+              searchBooks(e.target.value);
+            }
+          });
+        }
+
+        // Set up filter input change listeners for validation
+        document.getElementById('min-price1').addEventListener('input', () => {
+          // Validate min price is not greater than max price
+          const minPrice = parseFloat(
+            document.getElementById('min-price1').value
+          );
+          const maxPrice = parseFloat(
+            document.getElementById('max-price1').value
+          );
+          if (minPrice > maxPrice) {
+            document.getElementById('min-price1').value = maxPrice;
+          }
+        });
+
+        document.getElementById('max-price1').addEventListener('input', () => {
+          // Validate max price is not less than min price
+          const minPrice = parseFloat(
+            document.getElementById('min-price1').value
+          );
+          const maxPrice = parseFloat(
+            document.getElementById('max-price1').value
+          );
+          if (maxPrice < minPrice) {
+            document.getElementById('max-price1').value = minPrice;
+          }
+        });
+      });
+
+      // Also handle already loaded pages
+      if (
+        document.readyState === 'complete' ||
+        document.readyState === 'interactive'
+      ) {
+        console.log('Document already loaded, initializing...');
+        if (!booksContainer) {
+          booksContainer = document.querySelector('.books-container');
+          console.log('Books container (already loaded):', booksContainer);
+          populateCategoryFilters();
+          fetchAllBooks();
+
+          // Set up event listeners for filter buttons
+          const applyFiltersBtn = document.getElementById('apply-filters');
+          if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', applyFiltersAndSort);
+          }
+
+          const resetFiltersBtn = document.getElementById('reset-filters');
+          if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', resetFilters);
+          }
+
+          // Set up sort select
+          const sortSelect = document.getElementById('sort-books');
+          if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+              currentSortOption = e.target.value;
+              applyFiltersAndSort();
+            });
+          }
+
+          // Set up search functionality
+          const searchInput = document.getElementById('search-input');
+          const searchButton = document.getElementById('search-button');
+
+          if (searchInput && searchButton) {
+            // Search on button click
+            searchButton.addEventListener('click', () => {
+              searchBooks(searchInput.value);
+            });
+
+            // Search on Enter key press
+            searchInput.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') {
+                searchBooks(searchInput.value);
+              }
+            });
+          }
+        }
+      }
+
+      // Function to show notification
+      function showNotification(message, isSuccess = true) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.style.backgroundColor = isSuccess ? '#4CAF50' : '#f44336';
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 3000);
+      }
+
+      // Enhanced fetchBooks function with improved quantity control and cart addition
+      function fetchBooks() {
+        const token = sessionStorage.getItem('authToken');
+
+        // Check if token exists
+        if (!token) {
+          showNotification(
+            'Authentication token is missing. Please log in.',
+            false
+          );
+          return;
+        }
+
+        const booksContainer = document.querySelector('.books-container');
+        booksContainer.innerHTML =
+          "<div class='loading'>Loading bestsellers...</div>";
+
+        fetch('http://localhost:5085/api/Book/GetAllBooks', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+          })
+          .then((data) => {
+            const booksArray = Array.isArray(data.data) ? data.data : [];
+            const bestsellers = booksArray
+              .filter((book) => book.isBestseller === true)
+              .slice(0, 4); // Only take first 4 bestsellers
+
+            if (bestsellers.length === 0) {
+              booksContainer.innerHTML =
+                "<div class='no-books'>No bestsellers available.</div>";
+              return;
+            }
+
+            booksContainer.innerHTML = ''; // Clear loading
+
+            bestsellers.forEach((book) => {
+              const {
+                id,
+                title,
+                authorName,
+                price,
+                format,
+                coverImageUrl,
+                inventory
+              } = book;
+
+              const quantityInStock = inventory?.quantityInStock ?? 0;
+              const isAvailable = inventory?.isAvailable ?? false;
+
+              const bookDiv = document.createElement('div');
+              bookDiv.className = 'book';
+              bookDiv.innerHTML = `
+                        <div class="book-category">${
+                          format || 'Unknown Format'
+                        }</div>
+                        <div class="book-cover" style="background-image: url('${
+                          coverImageUrl ||
+                          'https://source.unsplash.com/random/200x300/?book'
+                        }')"></div>
+                        <div class="book-info">
+                            <h3>${title}</h3>
+                            <p>${authorName}</p>
+                            <div class="book-meta">
+                                <div>$${price.toFixed(2)}</div>
+                            </div>
+                            <div class="book-status ${
+                              isAvailable ? 'available' : 'unavailable'
+                            }">
+                                ${
+                                  isAvailable
+                                    ? `In Stock (${quantityInStock})`
+                                    : 'Out of Stock'
+                                }
+                            </div>
+                            <div class="book-actions">
+                                ${
+                                  isAvailable
+                                    ? `
+                                    <div class="quantity-control">
+                                        <button type="button" class="decrease-qty">-</button>
+                                        <input type="text" class="qty-input" value="1" min="1" max="${quantityInStock}" readonly>
+                                        <button type="button" class="increase-qty">+</button>
+                                    </div>
+                                    <div class="book-btn primary" data-book-id="${id}">Add to Cart</div>
+                                `
+                                    : ''
+                                }
+                            </div>
+                        </div>
+                    `;
+
+              // Quantity control logic
+              if (isAvailable) {
+                const decreaseBtn = bookDiv.querySelector('.decrease-qty');
+                const increaseBtn = bookDiv.querySelector('.increase-qty');
+                const qtyInput = bookDiv.querySelector('.qty-input');
+                const addToCartBtn = bookDiv.querySelector('.book-btn.primary');
+
+                // Prevent navigation when interacting with quantity controls
+                decreaseBtn.addEventListener('click', (event) => {
+                  event.stopPropagation(); // Stop event from bubbling to parent
+                  let currentQty = parseInt(qtyInput.value);
+                  if (currentQty > 1) {
+                    qtyInput.value = currentQty - 1;
+                  }
+                });
+
+                increaseBtn.addEventListener('click', (event) => {
+                  event.stopPropagation(); // Stop event from bubbling to parent
+                  let currentQty = parseInt(qtyInput.value);
+                  if (currentQty < quantityInStock) {
+                    qtyInput.value = currentQty + 1;
+                  }
+                });
+
+                // Prevent navigation on quantity control interactions
+                qtyInput.addEventListener('click', (event) => {
+                  event.stopPropagation();
+                });
+
+                // Add to Cart functionality
+                addToCartBtn.addEventListener('click', (event) => {
+                  event.stopPropagation(); // Prevent navigation to product detail
+
+                  const bookId = addToCartBtn.getAttribute('data-book-id');
+                  const quantity = parseInt(qtyInput.value);
+                  const token = sessionStorage.getItem('authToken');
+
+                  // Check if token exists
+                  if (!token) {
+                    showNotification(
+                      'Authentication token is missing. Please log in.',
+                      false
+                    );
+                    return;
+                  }
+
+                  // Send request to add book to cart
+                  fetch(
+                    `http://localhost:5085/api/Cart/add?bookId=${bookId}&quantity=${quantity}`,
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                      }
+                    }
+                  )
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw new Error('Failed to add book to cart');
+                      }
+                      return response.json();
+                    })
+                    .then((data) => {
+                      // Show success notification
+                      showNotification(`${title} added to cart successfully!`);
+                    })
+                    .catch((error) => {
+                      console.error('Error:', error);
+                      showNotification(
+                        'Failed to add book to cart. Please try again.',
+                        false
+                      );
+                    });
+                });
+              }
+
+              // Only add product detail navigation if not interacting with controls
+              bookDiv.addEventListener('click', (event) => {
+                // Check if click was not on interactive elements
+                if (!event.target.closest('.quantity-control, .book-btn')) {
+                  window.location.href = `product-detail.html?id=${id}`;
+                }
+              });
+
+              booksContainer.appendChild(bookDiv);
+            });
+          })
+          .catch((error) => {
+            console.error('Error fetching bestsellers:', error);
+            booksContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load bestsellers. Please try again later.</p>
+                        <button class="retry-btn">Retry</button>
+                    </div>
+                `;
+            document
+              .querySelector('.retry-btn')
+              .addEventListener('click', fetchBooks);
+          });
+      }
+
+      document.addEventListener('DOMContentLoaded', fetchBooks);
+    </script>
+  </body>
+</html>

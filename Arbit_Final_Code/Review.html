@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven Library - Reviews</title>
+    <link rel="stylesheet" href="Review.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Book Haven Library</h1>
+            <h2>Review Your Purchased Books</h2>
+        </header>
+
+        <main>
+            <section class="purchased-books">
+                <h3>Your Purchased Books</h3>
+                <div id="books-list" class="books-grid">
+                    <!-- Books will be loaded here -->
+                    <div class="loading">Loading your purchased books...</div>
+                </div>
+            </section>
+
+            <section class="review-form-container hidden" id="review-form-container">
+                <h3>Write a Review</h3>
+                <div class="selected-book">
+                    <img id="selected-book-cover" src="" alt="Book cover">
+                    <div class="book-info">
+                        <h4 id="selected-book-title"></h4>
+                        <p id="selected-book-author"></p>
+                    </div>
+                </div>
+                
+                <form id="review-form">
+                    <input type="hidden" id="book-id">
+                    <input type="hidden" id="review-id">
+                    
+                    <div class="rating-container">
+                        <p>Your Rating:</p>
+                        <div class="star-rating">
+                            <i class="fas fa-star" data-rating="1"></i>
+                            <i class="fas fa-star" data-rating="2"></i>
+                            <i class="fas fa-star" data-rating="3"></i>
+                            <i class="fas fa-star" data-rating="4"></i>
+                            <i class="fas fa-star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="rating-value" name="rating" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comment">Your Review:</label>
+                        <textarea id="comment" name="comment" rows="6" placeholder="Share your thoughts about this book..." required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="cancel-review" class="btn-secondary">Cancel</button>
+                        <button type="submit" id="submit-review" class="btn-primary">Submit Review</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="my-reviews hidden" id="my-reviews">
+                <h3>Your Reviews</h3>
+                <div id="reviews-list">
+                    <!-- Reviews will be loaded here -->
+                </div>
+            </section>
+        </main>
+
+        <div id="message-container" class="message-container"></div>
+    </div>
+
+    <script src="Review.js"></script>
+</body>
+</html>

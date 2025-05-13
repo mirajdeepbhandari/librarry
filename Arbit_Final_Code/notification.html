@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - BookHaven</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #3498db;
+        }
+
+        .back-btn i {
+            margin-right: 5px;
+        }
+
+        /* Notification Styles */
+        .notification-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .notification-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-card.active {
+            border-left: 4px solid #27ae60;
+        }
+
+        .notification-card.inactive {
+            border-left: 4px solid #e74c3c;
+            opacity: 0.7;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .notification-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .notification-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background-color: #e8f5e9;
+            color: #27ae60;
+        }
+
+        .status-inactive {
+            background-color: #ffebee;
+            color: #e74c3c;
+        }
+
+        .notification-content {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #7f8c8d;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .notification-dates {
+            display: flex;
+            gap: 20px;
+        }
+
+        .date-label {
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .notification-id {
+            font-size: 12px;
+            color: #95a5a6;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            color: #95a5a6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .notification-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .notification-dates {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .notification-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .notification-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <h1>BookHaven</h1>
+            </div>
+            <a href="javascript:history.back()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </header>
+
+    <section class="notification-section">
+        <div class="container">
+            <h2 class="section-title">Notifications</h2>
+            <div id="notifications-container">
+                <!-- Notifications will be loaded here -->
+                <div class="loading-spinner">Loading...</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Fetch notifications when the page loads
+    fetchNotifications();
+
+    // Function to format date
+    function formatDate(dateString) {
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
+    // Function to check if a notification is currently active
+    function isCurrentlyActive(startDate, endDate, isActive) {
+        if (!isActive) return false;
+        
+        const now = new Date();
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        
+        return now >= start && now <= end;
+    }
+
+    // Function to fetch notifications from the API
+    async function fetchNotifications() {
+        const container = document.getElementById('notifications-container');
+        
+        // Show loading spinner
+        container.innerHTML = `
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading notifications...</p>
+            </div>
+        `;
+        
+        try {
+            // Get the authentication token from session storage
+            const token = sessionStorage.getItem("authToken");
+            
+            if (!token) {
+                throw new Error('Authentication token not found. Please log in again.');
+            }
+            
+            // Fetch data from the API
+            const response = await fetch('http://localhost:5085/api/Announcement', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            // Check if the response is successful
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`API Error (${response.status}): ${errorText || 'Failed to fetch notifications'}`);
+            }
+            
+            // Parse the JSON response
+            const data = await response.json();
+            
+            // Check if the API returned a success status
+            if (!data.success) {
+                throw new Error(data.message || 'API returned an unsuccessful response');
+            }
+            
+            // Render the notifications
+            renderNotifications(data.data);
+            
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+            
+            // Display error message
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h4>Oops! Something went wrong</h4>
+                    <p>${error.message || 'We couldn\'t load your notifications. Please try again later.'}</p>
+                    <button class="retry-btn" onclick="fetchNotifications()">Try Again</button>
+                </div>
+            `;
+        }
+    }
+
+    // Function to render notifications
+    function renderNotifications(notifications) {
+        const container = document.getElementById('notifications-container');
+        
+        // Clear container
+        container.innerHTML = '';
+        
+        // Check if there are any notifications
+        if (!notifications || notifications.length === 0) {
+            // Show empty state if no notifications
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-bell-slash"></i>
+                    <h3>No Notifications</h3>
+                    <p>You don't have any notifications at the moment. Check back later!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Sort notifications: active first, then by start date (newest first)
+        notifications.sort((a, b) => {
+            // First sort by active status
+            if (a.isActive !== b.isActive) {
+                return a.isActive ? -1 : 1;
+            }
+            
+            // Then sort by start date (newest first)
+            return new Date(b.startDate) - new Date(a.startDate);
+        });
+        
+        // Create a container for the notifications
+        const notificationsGrid = document.createElement('div');
+        notificationsGrid.className = 'notifications-grid';
+        
+        // Render each notification
+        notifications.forEach(notification => {
+            const currentlyActive = isCurrentlyActive(
+                notification.startDate, 
+                notification.endDate, 
+                notification.isActive
+            );
+            
+            const cardHTML = `
+                <div class="notification-card ${notification.isActive ? 'active' : 'inactive'}">
+                    <div class="notification-header">
+                        <h3 class="notification-title">${notification.title}</h3>
+                        <span class="notification-status ${notification.isActive ? 'status-active' : 'status-inactive'}">
+                            ${notification.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div class="notification-content">
+                        ${notification.content}
+                    </div>
+                    <div class="notification-meta">
+                        <div class="notification-dates">
+                            <div>
+                                <span class="date-label">From:</span>
+                                ${formatDate(notification.startDate)}
+                            </div>
+                            <div>
+                                <span class="date-label">To:</span>
+                                ${formatDate(notification.endDate)}
+                            </div>
+                        </div>
+                        <div class="notification-id">
+                            ID: ${notification.id}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            notificationsGrid.innerHTML += cardHTML;
+        });
+        
+        // Add the notifications grid to the container
+        container.appendChild(notificationsGrid);
+    }
+
+    // Make fetchNotifications available globally so it can be called from HTML
+    window.fetchNotifications = fetchNotifications;
+});
+    </script>
+    
+</body>
+</html>
